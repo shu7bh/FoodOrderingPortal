@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const PORT = 4000;
-const DB_NAME = "tutorial"
+const DB_NAME = "FoodOrderingPortal"
 
 // routes
 var testAPIRouter = require("./routes/testAPI");
@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Connection to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/' + DB_NAME, { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://shu7bh:dpsmis1907@foodorderingportal.t7h4v.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', { useNewUrlParser: true });
 const connection = mongoose.connection;
 connection.once('open', function() {
     console.log("MongoDB database connection established successfully !");
