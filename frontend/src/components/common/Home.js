@@ -1,14 +1,45 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 
 const Home = (props) => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    setName("Dass TAs");
-  }, []);
+    useEffect(() => {
+    }, []);
 
-  return <div style={{ textAlign: "center" }}>Happy Coding - {name}</div>;
+    return (
+        <Grid container align={"center"} spacing={5}>
+            <Grid item xs={12}>
+                <div style={{ font : "bold", fontSize : "2em" }}>
+                    Welcome to IIIT Hyderabad Food Ordering Portal
+                </div>
+            </Grid>
+            <Grid item xs={12}>
+                <Button
+                    variant={"contained"}
+                    color={"primary"}
+                    onClick={() => {
+                        navigate("/login");
+                    }}
+                >
+                    Login
+                </Button>
+            </Grid>
+            <Grid item xs={12}>
+                <Button
+                    variant={"contained"}
+                    color={"primary"}
+                    onClick={() => {
+                        navigate("/register");
+                    }}
+                >
+                    Register
+                </Button>
+            </Grid>
+        </Grid>
+    )
 };
 
 export default Home;
