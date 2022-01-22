@@ -57,14 +57,14 @@ function App() {
             <Route path="login" element={<Login />} />
             </Route>
             <Route path="/" element={<BuyerNavbarLayout />}>
-            <Route path="/buyer/buyerProfile" element={<BuyerProfile />} />
-            <Route path="/buyer/buyerDashboard" element={<BuyerDashboard />} />
-            <Route path="/buyer/buyerMyOrders" element={<BuyerMyOrders />} />
+            <Route path="/buyer/profile" element={<BuyerProfile />} />
+            <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
+            <Route path="/buyer/myorders" element={<BuyerMyOrders />} />
             </Route>
             <Route path="/" element={<VendorNavbarLayout />}>
-            <Route path="/vendor/vendorProfile" element={<VendorProfile />} />
-            <Route path="/vendor/vendorDashboard" element={<VendorDashboard />} />
-            <Route path="/vendor/vendorStatistics" element={<VendorStatistics />} />
+            <Route path="/vendor/profile" element={<VendorProfile />} />
+            <Route path="/vendor/dashboard" element={<VendorDashboard />} />
+            <Route path="/vendor/statistics" element={<VendorStatistics />} />
             </Route>
         </Routes>
         </BrowserRouter>

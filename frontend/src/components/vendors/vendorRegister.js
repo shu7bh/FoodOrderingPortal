@@ -50,11 +50,10 @@ const VendorRegister = (props) => {
             .post("http://localhost:4000/vendor/register", newUser)
             .then((response) => {
                 alert("Created\t" + response.data.name);
-                console.log(response.data);
+                resetInputs();
+                navigate("/vendor/dashboard");
             });
 
-        resetInputs();
-        navigate("/vendor/vendorDashboard");
     };
 
     return (

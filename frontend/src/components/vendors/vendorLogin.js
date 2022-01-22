@@ -4,7 +4,7 @@ import axios from "axios";
 import Grid from "@mui/material/Grid";
 import { MenuItem, Select, TextField, Button  } from "@mui/material";
 
-const BuyerRegister = (props) => {
+const VendorLogin = (props) => {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
@@ -31,7 +31,7 @@ const BuyerRegister = (props) => {
             .then((response) => {
                 alert("Login Successful");
                 resetInputs();
-                navigate("/vendor/vendorDashboard");
+                navigate("/vendor/dashboard");
                 localStorage.setItem("user", checkUser.email);
             })
             .catch((error) => {
@@ -75,4 +75,4 @@ const BuyerRegister = (props) => {
     );
 };
 
-export default BuyerRegister;
+export default VendorLogin;

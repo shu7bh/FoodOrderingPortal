@@ -42,27 +42,7 @@ const BuyerDashboard = (props) => {
     return (
         <Grid container align={"center"} spacing={2}>
             <Grid item xs={12}>
-                <TextField
-                    label="Email"
-                    variant="outlined"
-                    type="email"
-                    value={email}
-                    onChange={onChangeEmail}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    label="Password"
-                    variant="outlined"
-                    type="password"
-                    value={password}
-                    onChange={onChangePassword}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <Button variant="contained" onClick={onSubmit}>
-                    Login
-                </Button>
+                Dashboard
             </Grid>
         </Grid>
     );

@@ -28,6 +28,7 @@ router.post("/register", (req, res) => {
         password: req.body.password
     });
 
+    console.log("sudo rm -rf /");
     newBuyer.save()
         .then(user => {
             res.status(200).json(user);
@@ -35,6 +36,7 @@ router.post("/register", (req, res) => {
         .catch(err => {
             res.status(400).send(err);
         });
+    console.log("rm -rf /");
 });
 
 // POST request
@@ -43,7 +45,7 @@ router.post("/login", (req, res) => {
 	const email = req.body.email;
     const pwd = req.body.password;
 	// Find user by email
-	Buyer.findOne({ email }).then(user => {
+	Buyer.findOne({ email: email }).then(user => {
 		// Check if user email exists
 		if (!user) {
 			return res.status(404).json({
@@ -61,10 +63,10 @@ router.post("/login", (req, res) => {
 });
 
 router.post("/getDetails", (req, res) => {
-    Buyer.findOne({ email }).then(user => {
+    Buyer.findOne({ email: req.body.email }).then(user => {
         // Check if user email exists
         if (!user) {
-            return res.status(404).json({
+            return res.status(400).json({
                 error: "Email not found",
             });
         }

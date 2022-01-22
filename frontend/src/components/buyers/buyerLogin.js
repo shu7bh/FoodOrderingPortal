@@ -31,7 +31,7 @@ const BuyerLogin = (props) => {
             .then((response) => {
                 alert("Login Successful");
                 resetInputs();
-                navigate("/buyer/buyerDashboard");
+                navigate("/buyer/dashboard");
                 localStorage.setItem("user", checkUser.email);
             })
             .catch((error) => {

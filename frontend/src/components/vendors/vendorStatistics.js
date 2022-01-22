@@ -4,7 +4,7 @@ import axios from "axios";
 import Grid from "@mui/material/Grid";
 import { MenuItem, Select, TextField, Button  } from "@mui/material";
 
-const BuyerDashboard = (props) => {
+const VendorStatistics = (props) => {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
@@ -68,4 +68,4 @@ const BuyerDashboard = (props) => {
     );
 };
 
-export default BuyerDashboard;
+export default VendorStatistics;

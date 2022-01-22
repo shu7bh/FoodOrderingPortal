@@ -45,11 +45,13 @@ const BuyerRegister = (props) => {
             .post("http://localhost:4000/buyer/register", newUser)
             .then((response) => {
                 alert("Created\t" + response.data.name);
-                console.log(response.data);
+                resetInputs();
+                navigate("/buyer/dashboard");
+            })
+            .catch((error) => {
+                alert(error);
             });
 
-        resetInputs();
-        navigate("/buyer/buyerDashboard");
     };
 
     return (

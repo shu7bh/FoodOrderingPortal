@@ -16,10 +16,10 @@ const HomeNavbar = () => {
                     Dashboard
                 </Typography>
                 <Box sx={{ flexGrow: 1 }} />
-                <Button color="inherit" onClick={() => navigate("/buyer/buyerMyOrders")}>
+                <Button color="inherit" onClick={() => navigate("/buyer/myorders")}>
                     My Orders
                 </Button>
-                <Button color="inherit" onClick={() => navigate("/buyer/buyerProfile")}>
+                <Button color="inherit" onClick={() => navigate("/buyer/profile")}>
                     My Profile
                 </Button>
             </Toolbar>

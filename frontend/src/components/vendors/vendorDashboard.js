@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Grid from "@mui/material/Grid";
-import { MenuItem, Select, TextField, Button  } from "@mui/material";
+import { MenuItem, Select, TextField, Button, Grid  } from "@mui/material";
 
-const BuyerDashboard = (props) => {
+const VendorDashboard = (props) => {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
@@ -31,7 +30,7 @@ const BuyerDashboard = (props) => {
             .then((response) => {
                 alert("Login Successful");
                 resetInputs();
-                navigate("/buyer/profile");
+                navigate("/vendor/dashboard");
                 localStorage.setItem("user", checkUser.email);
             })
             .catch((error) => {
@@ -68,4 +67,4 @@ const BuyerDashboard = (props) => {
     );
 };
 
-export default BuyerDashboard;
+export default VendorDashboard;
