@@ -18,22 +18,20 @@ const Home = (props) => {
             </Grid>
             <Grid item xs={12}>
                 <Button
+                    style={{maxWidth: '12rem', maxHeight: '4rem', minWidth: '12rem', minHeight: '4rem', fontSize: '1.2rem'}}
                     variant={"contained"}
                     color={"primary"}
-                    onClick={() => {
-                        navigate("/login");
-                    }}
+                    onClick={() => navigate("/login")}
                 >
                     Login
                 </Button>
             </Grid>
             <Grid item xs={12}>
                 <Button
+                    style={{maxWidth: '12rem', maxHeight: '4rem', minWidth: '12rem', minHeight: '4rem', fontSize: '1.2rem'}}
                     variant={"contained"}
                     color={"primary"}
-                    onClick={() => {
-                        navigate("/register");
-                    }}
+                    onClick={() => navigate("/register")}
                 >
                     Register
                 </Button>

@@ -22,7 +22,7 @@ router.get("/", function(req, res) {
 // Add a user to db
 router.post("/register", (req, res) => {
     const newVendor = new Vendor({
-        name: req.body.userName,
+        name: req.body.name,
         email: req.body.email,
         contact: req.body.contact,
         shopName: req.body.shopName,
@@ -53,10 +53,13 @@ router.post("/login", (req, res) => {
 				error: "Email not found",
 			});
         }
-        else if (user.password === pwd){
-            res.send("Login Successful");
-            return user;
+        else if (user.password == pwd){
+            return res.status(200).json(user);
         }
+        else
+			return res.status(401).json({
+				error: pwd + " is incorrect",
+			});
 	});
 });
 

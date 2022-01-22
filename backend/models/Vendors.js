@@ -40,11 +40,10 @@ const VendorSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        minlength: 6,
         maxlength: 50
     }
 }, {
     timestamps: true
 });
 
-module.exports = Buyers = mongoose.model("Buyers", BuyerSchema);
+module.exports = Vendors = mongoose.model("Vendors", VendorSchema);

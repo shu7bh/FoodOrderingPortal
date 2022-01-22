@@ -1,10 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
-import { MenuItem, Select, TextField, Button, FormControl, InputLabel, Grid  } from "@mui/material";
-import BuyerRegister from "../buyers/buyerRegister.js";
-import VendorRegister from "../vendors/vendorRegister.js";
+import { MenuItem, Select, TextField, Button, Grid, FormControl, InputLabel  } from "@mui/material";
+import BuyerLogin from "../buyers/buyerLogin.js";
+import VendorLogin from "../vendors/vendorLogin.js";
 
-const Register = (props) => {
+const Login = (props) => {
     const [userType, setUserType] = useState("");
     const onChangeUserType = (event) => { setUserType(event.target.value); }
 
@@ -21,7 +21,7 @@ const Register = (props) => {
         <Grid container align={"center"} spacing={2}>
             <Grid item xs={12}>
                 <div>
-                    <h1>Register</h1>
+                    <h1>Login</h1>
                 </div>
             </Grid>
             <Grid item xs={12}>
@@ -32,7 +32,7 @@ const Register = (props) => {
                         onChange={onChangeUserType}
                         sx = {{ minWidth: "400px", minHeight: "60px" }}
                     >
-                        <MenuItem value=""> None </MenuItem>
+                        <MenuItem value={""}> <em>None</em> </MenuItem>
                         <MenuItem value={"Buyer"}>Buyer</MenuItem>
                         <MenuItem value={"Vendor"}>Vendor</MenuItem>
                     </Select>
@@ -40,11 +40,11 @@ const Register = (props) => {
             </Grid>
             <Grid item xs={12}>
             {
-                userType === "Buyer" ? <BuyerRegister /> : userType === "Vendor" ? <VendorRegister /> : null
+                userType === "Buyer" ? <BuyerLogin /> : userType === "Vendor" ? <VendorLogin /> : null
             }
             </Grid>
         </Grid>
     );
 };
 
-export default Register;
+export default Login;

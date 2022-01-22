@@ -1,15 +1,17 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Grid from "@mui/material/Grid";
-import { MenuItem, Select, TextField, Button  } from "@mui/material";
+import { MenuItem, Select, TextField, Button, Grid, FormControl, InputLabel  } from "@mui/material";
 
 const BuyerRegister = (props) => {
+    const navigate = useNavigate();
+
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [contact, setContact] = useState("");
     const [age, setAge] = useState("20");
-    const [batch, setBatch] = useState("UG1");
+    const [batch, setBatch] = useState("");
 
     const onChangeName = (event) => { setName(event.target.value); };
     const onChangeEmail = (event) => { setEmail(event.target.value); };
@@ -24,7 +26,7 @@ const BuyerRegister = (props) => {
         setPassword("");
         setContact("");
         setAge("20");
-        setBatch("UG1");
+        setBatch("");
     };
 
     const onSubmit = (event) => {
@@ -47,6 +49,7 @@ const BuyerRegister = (props) => {
             });
 
         resetInputs();
+        navigate("/buyer/buyerDashboard");
     };
 
     return (
@@ -57,6 +60,7 @@ const BuyerRegister = (props) => {
                     variant="outlined"
                     value={name}
                     onChange={onChangeName}
+                    sx = {{ minWidth: "400px", minHeight: "60px" }}
                 />
             </Grid>
             <Grid item xs={12}>
@@ -66,6 +70,7 @@ const BuyerRegister = (props) => {
                     type="email"
                     value={email}
                     onChange={onChangeEmail}
+                    sx = {{ minWidth: "400px", minHeight: "60px" }}
                 />
             </Grid>
             <Grid item xs={12}>
@@ -75,6 +80,7 @@ const BuyerRegister = (props) => {
                     type="password"
                     value={password}
                     onChange={onChangePassword}
+                    sx = {{ minWidth: "400px", minHeight: "60px" }}
                 />
             </Grid>
             <Grid item xs={12}>
@@ -83,6 +89,7 @@ const BuyerRegister = (props) => {
                     variant="outlined"
                     value={contact}
                     onChange={onChangeContact}
+                    sx = {{ minWidth: "400px", minHeight: "60px" }}
                 />
             </Grid>
             <Grid item xs={12}>
@@ -92,24 +99,37 @@ const BuyerRegister = (props) => {
                     type="number"
                     value={age}
                     onChange={onChangeAge}
+                    sx = {{ minWidth: "400px", minHeight: "60px" }}
                 />
             </Grid>
             <Grid item xs={12}>
-                <Select value={batch} onChange={onChangeBatch}>
-                    <MenuItem value={"UG1"}>UG1</MenuItem>
-                    <MenuItem value={"UG2"}>UG2</MenuItem>
-                    <MenuItem value={"UG3"}>UG3</MenuItem>
-                    <MenuItem value={"UG4"}>UG4</MenuItem>
-                    <MenuItem value={"UG5"}>UG5</MenuItem>
-                    <MenuItem value={"UG6"}>UG6</MenuItem>
-                    <MenuItem value={"UG7"}>UG7</MenuItem>
-                    <MenuItem value={"UG8"}>UG8</MenuItem>
-                    <MenuItem value={"PG1"}>PG1</MenuItem>
-                    <MenuItem value={"PG2"}>PG2</MenuItem>
-                </Select>
+                <FormControl>
+                    <InputLabel> Batch </InputLabel>
+                    <Select
+                        value={batch}
+                        onChange={onChangeBatch}
+                        sx = {{ minWidth: "400px", minHeight: "60px" }}
+                    >
+                        <MenuItem value={""}> <em>None</em> </MenuItem>
+                        <MenuItem value={"UG1"}>UG1</MenuItem>
+                        <MenuItem value={"UG2"}>UG2</MenuItem>
+                        <MenuItem value={"UG3"}>UG3</MenuItem>
+                        <MenuItem value={"UG4"}>UG4</MenuItem>
+                        <MenuItem value={"UG5"}>UG5</MenuItem>
+                        <MenuItem value={"UG6"}>UG6</MenuItem>
+                        <MenuItem value={"UG7"}>UG7</MenuItem>
+                        <MenuItem value={"UG8"}>UG8</MenuItem>
+                        <MenuItem value={"PG1"}>PG1</MenuItem>
+                        <MenuItem value={"PG2"}>PG2</MenuItem>
+                    </Select>
+                </FormControl>
             </Grid>
             <Grid item xs={12}>
-                <Button variant="contained" onClick={onSubmit}>
+                <Button
+                    variant="contained"
+                    onClick={onSubmit}
+                    sx = {{ minWidth: "400px", minHeight: "60px" }}
+                >
                     Register
                 </Button>
             </Grid>
