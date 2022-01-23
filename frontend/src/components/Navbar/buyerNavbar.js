@@ -22,6 +22,12 @@ const HomeNavbar = () => {
                 <Button color="inherit" onClick={() => navigate("/buyer/profile")}>
                     My Profile
                 </Button>
+                <Button color="inherit" onClick={() => {
+                    navigate("/");
+                    localStorage.removeItem("user");
+                }}>
+                    Log Out
+                </Button>
             </Toolbar>
             </AppBar>
         </Box>

@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Grid from "@mui/material/Grid";
-import { MenuItem, Select, TextField, Button  } from "@mui/material";
+import { MenuItem, Select, TextField, Button, FormControl, InputLabel } from "@mui/material";
 
 const BuyerProfile = (props) => {
-    const navigate = useNavigate();
 
     const [name, setName] = useState("");
-    const [email, setEmail] = useState(localStorage.getItem("user"));
+    const [email] = useState(localStorage.getItem("user"));
     const [password, setPassword] = useState("");
     const [contact, setContact] = useState("");
     const [age, setAge] = useState("");
@@ -22,15 +20,15 @@ const BuyerProfile = (props) => {
     const [savedAge, setSavedAge] = useState("");
     const [savedBatch, setSavedBatch] = useState("");
 
-    const onChangeName = (event) => { if (editOn) setName(event.target.value); }
-    const onChangePassword = (event) => { if (editOn) setPassword(event.target.value); }
-    const onChangeContact = (event) => { if(editOn) setContact(event.target.value); }
-    const onChangeAge = (event) => { if (editOn) setAge(event.target.value); }
-    const onChangeBatch = (event) => { if (editOn) setBatch(event.target.value); }
+    const onChangeName = (event) => { setName(event.target.value); }
+    const onChangePassword = (event) => { setPassword(event.target.value); }
+    const onChangeContact = (event) => { setContact(event.target.value); }
+    const onChangeAge = (event) => { setAge(event.target.value); }
+    const onChangeBatch = (event) => { setBatch(event.target.value); }
     const onEditToggle = (event) => { setEditOn(!editOn) }
 
     useEffect(() => {
-        axios .post("http://localhost:4000/buyer/getDetails", {email: email})
+        axios.post("http://localhost:4000/buyer/getDetails", {email: email})
             .then((response) => {
                 setName(response.data.name);
                 setPassword(response.data.password);
@@ -46,7 +44,7 @@ const BuyerProfile = (props) => {
             .catch((error) => {
                 alert("Error\t" + error);
             });
-    }, []);
+    }, [email]);
 
     const resetInputs = () => {
         setName(savedName);
@@ -98,6 +96,7 @@ const BuyerProfile = (props) => {
                         variant="outlined"
                         value={name}
                         onChange={onChangeName}
+                        disabled={!editOn}
                         sx = {{ minWidth: "400px", minHeight: "60px" }}
                     />
                 </Grid>
@@ -107,6 +106,7 @@ const BuyerProfile = (props) => {
                         variant="outlined"
                         type="email"
                         value={email}
+                        disabled={true}
                         sx = {{ minWidth: "400px", minHeight: "60px" }}
                     />
                 </Grid>
@@ -117,6 +117,7 @@ const BuyerProfile = (props) => {
                         type="password"
                         value={password}
                         onChange={onChangePassword}
+                        disabled={!editOn}
                         sx = {{ minWidth: "400px", minHeight: "60px" }}
                     />
                 </Grid>
@@ -126,6 +127,7 @@ const BuyerProfile = (props) => {
                         variant="outlined"
                         value={contact}
                         onChange={onChangeContact}
+                        disabled={!editOn}
                         sx = {{ minWidth: "400px", minHeight: "60px" }}
                     />
                 </Grid>
@@ -136,17 +138,32 @@ const BuyerProfile = (props) => {
                         type="number"
                         value={age}
                         onChange={onChangeAge}
+                        disabled={!editOn}
                         sx = {{ minWidth: "400px", minHeight: "60px" }}
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField
-                        label="Batch"
-                        variant="outlined"
-                        value={batch}
-                        onChange={onChangeBatch}
-                        sx = {{ minWidth: "400px", minHeight: "60px" }}
-                    />
+                    <FormControl>
+                        <InputLabel> Batch </InputLabel>
+                        <Select
+                            value={batch}
+                            onChange={onChangeBatch}
+                            disabled={!editOn}
+                            sx = {{ minWidth: "400px", minHeight: "60px" }}
+                        >
+                            <MenuItem value={""}> <em>None</em> </MenuItem>
+                            <MenuItem value={"UG1"}>UG1</MenuItem>
+                            <MenuItem value={"UG2"}>UG2</MenuItem>
+                            <MenuItem value={"UG3"}>UG3</MenuItem>
+                            <MenuItem value={"UG4"}>UG4</MenuItem>
+                            <MenuItem value={"UG5"}>UG5</MenuItem>
+                            <MenuItem value={"UG6"}>UG6</MenuItem>
+                            <MenuItem value={"UG7"}>UG7</MenuItem>
+                            <MenuItem value={"UG8"}>UG8</MenuItem>
+                            <MenuItem value={"PG1"}>PG1</MenuItem>
+                            <MenuItem value={"PG2"}>PG2</MenuItem>
+                        </Select>
+                    </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                 </Grid>

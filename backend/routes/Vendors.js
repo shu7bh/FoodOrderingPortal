@@ -1,5 +1,5 @@
-var express = require("express");
-var router = express.Router();
+let express = require("express");
+let router = express.Router();
 
 // Load Vendor model
 const Vendor = require("../models/Vendors");
@@ -49,7 +49,7 @@ router.post("/login", (req, res) => {
 	Vendor.findOne({ email }).then(user => {
 		// Check if user email exists
 		if (!user) {
-			return res.status(404).json({
+			return res.status(400).json({
 				error: "Email not found",
 			});
         }
@@ -62,5 +62,44 @@ router.post("/login", (req, res) => {
 			});
 	});
 });
+
+router.post("/getDetails", (req, res) => {
+    Vendor.findOne({ email: req.body.email }).then(user => {
+        // Check if user email exists
+        if (!user) {
+            return res.status(400).json({
+                error: "Email not found",
+            });
+        }
+        else
+            return res.status(200).json(user);
+    });
+})
+
+router.post("/update", (req, res) => {
+    Vendor.findOne({ email: req.body.email }).then(user => {
+        // Check if user email exists
+        if (!user) {
+            return res.status(400).json({
+                error: "Email not found",
+            });
+        }
+        else{
+            user.name = req.body.name;
+            user.contact = req.body.contact;
+            user.password = req.body.password;
+            user.shopName = req.body.shopName;
+            user.openingTime = req.body.openingTime;
+            user.closingTime = req.body.closingTime;
+            user.save()
+                .then(user => {
+                    return res.status(200).json(user);
+                })
+                .catch(err => {
+                    return res.status(400).send(err);
+                });
+        }
+    })
+})
 
 module.exports = router;
