@@ -1,27 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-//const addOnSchema = new Schema({
-    //name: {
-        //type: String,
-        //required: true
-    //},
-    //price: {
-        //type: Number,
-        //required: true
-    //},
-    //description: {
-        //type: String,
-    //}
-//})
-
-//const tagSchema = new Schema({
-    //name: {
-        //type: String,
-        //required: true
-    //}
-//})
-
 const FoodSchema = new Schema({
     name: {
         type: String,
@@ -34,6 +13,10 @@ const FoodSchema = new Schema({
         type: Number,
         required: true
     },
+    veg: {
+        type: Boolean,
+        required: true
+    },
     rating: {
         type: Number,
         default: 0,
@@ -44,13 +27,17 @@ const FoodSchema = new Schema({
     image: {
         type: String,
     },
+    shopName: {
+        type: String,
+        required: true
+    },
     tags: {
         type: [{
             name: {
                 type: String,
                 required: true
             }
-        }]
+        }],
     },
     addOns: {
         type: [{
@@ -69,6 +56,5 @@ const FoodSchema = new Schema({
     }
 })
 
+FoodSchema.index({name: 1, shopName: 1}, {unique: true});
 module.exports = Food = mongoose.model("Food", FoodSchema);
-//module.exports = AddOn = mongoose.model("AddOn", addOnSchema);
-//module.exports = Tag = mongoose.model("Tag", tagSchema);

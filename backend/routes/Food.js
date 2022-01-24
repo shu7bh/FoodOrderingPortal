@@ -25,6 +25,8 @@ router.post("/add", (req, res) => {
         rating: req.body.rating,
         tags: req.body.tags,
         addOns: req.body.addOns,
+        shopName: req.body.shopName,
+        veg: req.body.veg,
     });
 
     newFood.save()

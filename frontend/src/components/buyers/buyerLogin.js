@@ -33,6 +33,7 @@ const BuyerLogin = () => {
                 resetInputs();
                 navigate("/buyer/dashboard");
                 localStorage.setItem("user", checkUser.email);
+                window.location.reload();
             })
             .catch((error) => {
                 alert("Error\t" + error);
