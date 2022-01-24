@@ -12,11 +12,11 @@ const BuyerDashboard = () => {
     const [allTags, setAllTags] = useState([]);
     const [allShopNames, setAllShopNames] = useState([]);
     const [search, setSearch] = useState("");
-    const [tag, setTag] = useState("");
+    const [tag, setTag] = useState('');
     const [vegOrNonVeg, setVegOrNonVeg] = useState();
     const [shopName, setShopName] = useState("");
-    const [minPrice, setMinPrice] = useState(null);
-    const [maxPrice, setMaxPrice] = useState(null);
+    const [minPrice, setMinPrice] = useState('');
+    const [maxPrice, setMaxPrice] = useState('');
 
     useEffect(() => {
         axios
@@ -65,18 +65,28 @@ const BuyerDashboard = () => {
     useEffect(() => {
         let result = foodItems;
         if (minPrice === '')
-        {
-            if (maxPrice !== '')
+            if (maxPrice === '')
+                result = foodItems;
+            else
                 result = foodItems.filter((foodItem) => foodItem.price <= maxPrice);
-        }
         else
             if (maxPrice === '')
                 result = foodItems.filter((foodItem) => foodItem.price >= minPrice);
             else
                 result = foodItems.filter((foodItem) => foodItem.price >= minPrice && foodItem.price <= maxPrice);
 
-        if (tag !== null)
-
+        if (tag !== '' && tag !== null)
+        {
+            let temp = [];
+            result.forEach((foodItem) => {
+                foodItem.tags.forEach((tag_) => {
+                    if (tag_.name == tag) {
+                        temp.push(foodItem);
+                    }
+                });
+            });
+            result = temp;
+        }
 
         setFilteredFoodItems(result);
     }, [minPrice, maxPrice, tag]);
@@ -197,7 +207,7 @@ const BuyerDashboard = () => {
                                 <Autocomplete
                                     options={allTags}
                                     style={{ minWidth: 200 }}
-                                    onChange={(_, value) => onSelectTag(value)}
+                                    onChange={(_, value) => setTag(value)}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
