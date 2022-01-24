@@ -14,7 +14,7 @@ const BuyerDashboard = () => {
     const [search, setSearch] = useState('');
     const [tag, setTag] = useState('');
     const [vegOrNonVeg, setVegOrNonVeg] = useState();
-    const [shopName, setShopName] = useState("");
+    const [shopName, setShopName] = useState('');
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
 
@@ -63,7 +63,9 @@ const BuyerDashboard = () => {
     }, []);
 
     useEffect(() => {
-        let result = foodItems;
+        let result = []
+        foodItems.forEach((foodItem) => { result.push(foodItem); } );
+
         if (minPrice === '')
             if (maxPrice === '')
                 result = foodItems;
@@ -88,7 +90,7 @@ const BuyerDashboard = () => {
             result = temp;
         }
 
-        if (vegOrNonVeg !== '' && vegOrNonVeg !== null)
+        if (vegOrNonVeg !== '' && vegOrNonVeg !== null && vegOrNonVeg !== undefined)
         {
             const veg = vegOrNonVeg === 'Veg'? true : false;
             let temp = [];
@@ -100,11 +102,22 @@ const BuyerDashboard = () => {
             result = temp;
         }
 
-        if (search !== '' && search !== null)
+        if (shopName !== '' && shopName !== null)
+        {
+            let temp = [];
+            result.forEach((foodItem) => {
+                if (foodItem.shopName === shopName) {
+                    temp.push(foodItem);
+                }
+            });
+            result = temp;
+        }
+
+        if (search !== '')
         {
             const fuse = new Fuse(result, {
                 keys: ["name"],
-                threshold: 0.2
+                threshold: 0.5
             });
 
             const res = fuse.search(search);
@@ -121,7 +134,7 @@ const BuyerDashboard = () => {
         }
 
         setFilteredFoodItems(result);
-    }, [minPrice, maxPrice, tag, vegOrNonVeg, search]);
+    }, [minPrice, maxPrice, tag, vegOrNonVeg, shopName, search]);
 
     const onSelectShop = (value) => {
         if (value == null)
@@ -229,7 +242,7 @@ const BuyerDashboard = () => {
                                     align="right"
                                     options={allShopNames}
                                     style={{ minWidth: 200 }}
-                                    onChange={(_, value) => onSelectShop(value)}
+                                    onChange={(_, value) => setShopName(value)}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
