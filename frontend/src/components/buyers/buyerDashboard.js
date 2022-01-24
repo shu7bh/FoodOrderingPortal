@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Fuse from "fuse.js";
-import { Autocomplete, FormControl, MenuItem, Select, InputLabel, TextField, Grid, Paper, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem  } from "@mui/material";
+import { Autocomplete, Button, MenuItem, Select, InputLabel, TextField, Grid, Paper, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem  } from "@mui/material";
+import { InputAdornment, IconButton } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 const BuyerDashboard = () => {
 
@@ -17,6 +21,8 @@ const BuyerDashboard = () => {
     const [shopName, setShopName] = useState('');
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
+    const [sortPrice, setSortPrice] = useState(false);
+    const [sortRating, setSortRating] = useState(false);
 
     useEffect(() => {
         axios
@@ -136,17 +142,36 @@ const BuyerDashboard = () => {
         setFilteredFoodItems(result);
     }, [minPrice, maxPrice, tag, vegOrNonVeg, shopName, search]);
 
-    const onSelectShop = (value) => {
-        if (value == null)
-            setFilteredFoodItems(foodItems);
-        else {
-            const result = []
-            foodItems.forEach((foodItem) => {
-                if (foodItem.shopName == value) {
-                    result.push(foodItem);
-                }
-            });
-            setFilteredFoodItems(result);
+    const onSortPrice = (val) => {
+        setSortPrice(val);
+
+        if (val)
+            setFilteredFoodItems(filteredFoodItems.sort((a, b) => b.price - a.price));
+        else
+            setFilteredFoodItems(filteredFoodItems.sort((a, b) => a.price - b.price));
+    }
+
+    const onSortRating = (val) => {
+        setSortRating(val);
+
+        if (val)
+            setFilteredFoodItems(filteredFoodItems.sort((a, b) => a.rating - b.rating));
+        else
+            setFilteredFoodItems(filteredFoodItems.sort((a, b) => b.rating - a.rating));
+    }
+
+    const toggleSort = (sortBy) => {
+        if (sortBy === 'price')
+        {
+            setFilteredFoodItems(filteredFoodItems.sort((a, b) => a.price - b.price));
+        }
+        else if (sortBy === 'rating')
+        {
+            setFilteredFoodItems(filteredFoodItems.sort((a, b) => b.rating - a.rating));
+        }
+        else if (sortBy === 'name')
+        {
+            setFilteredFoodItems(filteredFoodItems.sort((a, b) => a.name.localeCompare(b.name)));
         }
     }
 
@@ -260,6 +285,15 @@ const BuyerDashboard = () => {
                 <TextField
                     label="Search"
                     fullWidth={true}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment>
+                                <IconButton>
+                                    <SearchIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                     onChange={onChangeSearch}
                 />
                 <p />
@@ -272,8 +306,18 @@ const BuyerDashboard = () => {
                                 <TableCell>Sr No.</TableCell>
                                 <TableCell>Name</TableCell>
                                 <TableCell>Description</TableCell>
-                                <TableCell>Price</TableCell>
-                                <TableCell>Rating</TableCell>
+                                <TableCell>
+                                    Price
+                                    <Button onClick={() => onSortPrice(!sortPrice)}>
+                                        {sortPrice ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
+                                    </Button>
+                                </TableCell>
+                                <TableCell>
+                                    Rating
+                                    <Button onClick={() => onSortRating(!sortRating)}>
+                                        {sortRating ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
+                                    </Button>
+                                </TableCell>
                                 <TableCell>Tags</TableCell>
                                 <TableCell>Add Ons</TableCell>
                                 <TableCell>Canteen</TableCell>
