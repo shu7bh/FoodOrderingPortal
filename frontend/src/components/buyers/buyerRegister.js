@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { MenuItem, Select, TextField, Button, Grid, FormControl, InputLabel  } from "@mui/material";
 
-const BuyerRegister = (props) => {
+const BuyerRegister = () => {
     const navigate = useNavigate();
 
     const [name, setName] = useState("");
@@ -20,32 +20,21 @@ const BuyerRegister = (props) => {
     const onChangeAge = (event) => { setAge(event.target.value); }
     const onChangeBatch = (event) => { setBatch(event.target.value); }
 
-    const resetInputs = () => {
-        setName("");
-        setEmail("");
-        setPassword("");
-        setContact("");
-        setAge("20");
-        setBatch("");
-    };
-
     const onSubmit = (event) => {
-        event.preventDefault();
-
         const newUser = {
             name: name,
             email: email,
             password: password,
             contact: contact,
             age: age,
-            batch: batch
+            batch: batch,
         };
 
         axios
             .post("http://localhost:4000/buyer/register", newUser)
             .then((response) => {
                 alert("Created\t" + response.data.name);
-                resetInputs();
+                localStorage.setItem("user", newUser.email);
                 navigate("/buyer/dashboard");
             })
             .catch((error) => {

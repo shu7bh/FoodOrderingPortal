@@ -6,7 +6,6 @@ const BuyerSchema = new Schema({
 	name: {
 		type: String,
 		required: true,
-        unique: true,
         trim: true,
         maxlength: 50
 	},
@@ -20,7 +19,6 @@ const BuyerSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        unique: true
     },
     age: {
         type: Number,
@@ -37,6 +35,12 @@ const BuyerSchema = new Schema({
         required: true,
         trim: true,
         maxlength: 50
+    },
+    wallet: {
+        type: Number,
+        required: true,
+        default: 0,
+        trim: true
     }
 }, {
     timestamps: true

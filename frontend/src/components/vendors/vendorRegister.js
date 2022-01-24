@@ -23,16 +23,6 @@ const VendorRegister = (props) => {
     const onChangeOpeningTime = (event) => { setOpeningTime(event.target.value); }
     const onChangeClosingTime = (event) => { setClosingTime(event.target.value); }
 
-    const resetInputs = () => {
-        setName("");
-        setEmail("");
-        setPassword("");
-        setContact("");
-        setShopName("");
-        setOpeningTime("08:00");
-        setClosingTime("08:00");
-    };
-
     const onSubmit = (event) => {
         event.preventDefault();
 
@@ -50,10 +40,12 @@ const VendorRegister = (props) => {
             .post("http://localhost:4000/vendor/register", newUser)
             .then((response) => {
                 alert("Created\t" + response.data.name);
-                resetInputs();
+                localStorage.setItem("user", newUser.email);
                 navigate("/vendor/dashboard");
+            })
+            .catch((error) => {
+                alert(error);
             });
-
     };
 
     return (

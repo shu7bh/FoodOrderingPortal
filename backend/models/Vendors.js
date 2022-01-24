@@ -6,7 +6,6 @@ const VendorSchema = new Schema({
 	name: {
 		type: String,
 		required: true,
-        unique: true,
         trim: true,
         maxlength: 50
 	},
@@ -20,13 +19,11 @@ const VendorSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        unique: true
     },
     shopName: {
         type: String,
         required: true,
         trim: true,
-        unique: true
     },
     openingTime: {
         type: String,

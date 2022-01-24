@@ -12,10 +12,13 @@ const HomeNavbar = () => {
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
             <Toolbar>
-                <Typography variant="h6" component="div" sx={{ cursor: "pointer" }} onClick={() => navigate("/buyer/buyerDashboard")}>
+                <Typography variant="h6" component="div" sx={{ cursor: "pointer" }} onClick={() => navigate("/buyer/Dashboard")}>
                     Dashboard
                 </Typography>
                 <Box sx={{ flexGrow: 1 }} />
+                <Button color="inherit" onClick={() => navigate("/buyer/wallet")}>
+                    My Wallet
+                </Button>
                 <Button color="inherit" onClick={() => navigate("/buyer/myorders")}>
                     My Orders
                 </Button>
@@ -24,7 +27,7 @@ const HomeNavbar = () => {
                 </Button>
                 <Button color="inherit" onClick={() => {
                     navigate("/");
-                    localStorage.removeItem("user");
+                    localStorage.clear();
                 }}>
                     Log Out
                 </Button>

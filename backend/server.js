@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const PORT = 4000;
@@ -10,6 +9,9 @@ const DB_NAME = "FoodOrderingPortal"
 // routes
 let BuyerRouter = require("./routes/Buyers.js");
 let VendorRouter = require("./routes/Vendors.js");
+let FoodRouter = require("./routes/Food.js");
+//let AddonRouter = require("./routes/AddOn.js");
+//let TagRouter = require("./routes/Tag.js");
 
 app.use(cors());
 app.use(express.json());
@@ -27,6 +29,9 @@ connection.once('open', function() {
 // setup API endpoints
 app.use("/buyer", BuyerRouter);
 app.use("/vendor", VendorRouter);
+app.use("/food", FoodRouter);
+//app.use("/addon", AddonRouter);
+//app.use("/tag", TagRouter);
 
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);

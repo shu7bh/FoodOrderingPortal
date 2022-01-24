@@ -1,17 +1,20 @@
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import "./App.css";
 
-import Home from "./components/common/Home";
-import Register from "./components/common/Register";
-import Login from "./components/common/Login";
-import HomeNavbar from "./components/Navbar/homeNavbar.js";
-import BuyerNavbar from "./components/Navbar/buyerNavbar.js";
-import VendorNavbar from "./components/Navbar/vendorNavbar.js";
+import Home from "./components/home/Home";
+import Register from "./components/home/Register";
+import Login from "./components/home/Login";
+import HomeNavbar from "./components/home/homeNavbar.js";
+
+import BuyerNavbar from "./components/buyers/buyerNavbar.js";
 import BuyerProfile from "./components/buyers/buyerProfile";
-import VendorProfile from "./components/vendors/vendorProfile";
 import BuyerDashboard from "./components/buyers/buyerDashboard.js";
-import VendorDashboard from "./components/vendors/vendorDashboard.js";
 import BuyerMyOrders from "./components/buyers/buyerMyOrders";
+import BuyerWallet from "./components/buyers/buyerWallet.js";
+
+import VendorNavbar from "./components/vendors/vendorNavbar.js";
+import VendorProfile from "./components/vendors/vendorProfile";
+import VendorDashboard from "./components/vendors/vendorDashboard.js";
 import VendorStatistics from "./components/vendors/vendorStatistics";
 
 const VendorNavbarLayout = () => {
@@ -60,6 +63,7 @@ function App() {
             <Route path="/buyer/profile" element={<BuyerProfile />} />
             <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
             <Route path="/buyer/myorders" element={<BuyerMyOrders />} />
+            <Route path="/buyer/wallet" element={<BuyerWallet />} />
             </Route>
             <Route path="/" element={<VendorNavbarLayout />}>
             <Route path="/vendor/profile" element={<VendorProfile />} />

@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Grid from "@mui/material/Grid";
-import { MenuItem, Select, TextField, Button  } from "@mui/material";
+import { TextField, Button  } from "@mui/material";
 
-const BuyerLogin = (props) => {
+const BuyerLogin = () => {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
@@ -28,7 +28,7 @@ const BuyerLogin = (props) => {
 
         axios
             .post("http://localhost:4000/buyer/login", checkUser)
-            .then((response) => {
+            .then(() => {
                 alert("Login Successful");
                 resetInputs();
                 navigate("/buyer/dashboard");

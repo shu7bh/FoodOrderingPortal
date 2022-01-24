@@ -24,7 +24,7 @@ const HomeNavbar = () => {
                 </Button>
                 <Button color="inherit" onClick={() => {
                     navigate("/");
-                    localStorage.removeItem("user");
+                    localStorage.clear();
                 }}>
                     Log Out
                 </Button>

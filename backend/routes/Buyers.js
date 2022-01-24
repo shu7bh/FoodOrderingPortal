@@ -22,10 +22,10 @@ router.post("/register", (req, res) => {
     const newBuyer = new Buyer({
         name: req.body.name,
         email: req.body.email,
+        password: req.body.password,
         contact: req.body.contact,
         age: req.body.age,
-        batch: req.body.batch,
-        password: req.body.password
+        batch: req.body.batch
     });
 
     newBuyer.save()
@@ -87,6 +87,42 @@ router.post("/update", (req, res) => {
             user.age = req.body.age;
             user.batch = req.body.batch;
             user.password = req.body.password;
+            user.save()
+                .then(user => {
+                    return res.status(200).json(user);
+                })
+                .catch(err => {
+                    return res.status(400).send(err);
+                });
+        }
+    })
+})
+
+// Add a post request to get the wallet balance from the email provided
+
+router.post("/getWallet", (req, res) => {
+    Buyer.findOne({ email: req.body.email }).then(user => {
+        // Check if user email exists
+        if (!user) {
+            return res.status(400).json({
+                error: "Email not found",
+            });
+        }
+        else
+            return res.status(200).json(user);
+    });
+})
+
+router.post("/setWallet", (req, res) => {
+    Buyer.findOne({ email: req.body.email }).then(user => {
+        // Check if user email exists
+        if (!user) {
+            return res.status(400).json({
+                error: "Email not found",
+            });
+        }
+        else{
+            user.wallet = req.body.wallet;
             user.save()
                 .then(user => {
                     return res.status(200).json(user);
