@@ -52,8 +52,9 @@ const BuyerDashboard = () => {
 
     return (
         <Grid container align={"center"} spacing={2}>
-            <Grid item xs={12}>
+            <Grid item xs={0}>
                 <TextField
+                    style={{ align: "right" }}
                     label="Wallet"
                     variant="outlined"
                     value={wallet}
