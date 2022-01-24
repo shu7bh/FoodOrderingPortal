@@ -88,27 +88,20 @@ const BuyerDashboard = () => {
             result = temp;
         }
 
-        setFilteredFoodItems(result);
-    }, [minPrice, maxPrice, tag]);
-
-    const onSelectTag = (value) => {
-        const tag = value;
-
-        if (tag == null)
-            setFilteredFoodItems(foodItems);
-        else {
-            const result = []
-            foodItems.forEach((foodItem) => {
-                foodItem.tags.forEach((tag_) => {
-                    if (tag_.name == tag) {
-                        result.push(foodItem);
-                    }
-                });
+        if (vegOrNonVeg !== '' && vegOrNonVeg !== null)
+        {
+            const veg = vegOrNonVeg === 'Veg'? true : false;
+            let temp = [];
+            result.forEach((foodItem) => {
+                if (foodItem.veg === veg) {
+                    temp.push(foodItem);
+                }
             });
-            setFilteredFoodItems(result);
+            result = temp;
         }
 
-    };
+        setFilteredFoodItems(result);
+    }, [minPrice, maxPrice, tag, vegOrNonVeg]);
 
     const onSelectVeg = (value) => {
         if (value == null)
@@ -227,7 +220,7 @@ const BuyerDashboard = () => {
                                 <Autocomplete
                                     options={["Veg", "Non-Veg"]}
                                     style={{ minWidth: 200 }}
-                                    onChange={(_, value) => onSelectVeg(value)}
+                                    onChange={(_, value) => setVegOrNonVeg(value)}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
