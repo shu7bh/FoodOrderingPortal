@@ -11,7 +11,7 @@ const BuyerDashboard = () => {
     const [email] = useState(localStorage.getItem("user"));
     const [allTags, setAllTags] = useState([]);
     const [allShopNames, setAllShopNames] = useState([]);
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState('');
     const [tag, setTag] = useState('');
     const [vegOrNonVeg, setVegOrNonVeg] = useState();
     const [shopName, setShopName] = useState("");
@@ -100,23 +100,28 @@ const BuyerDashboard = () => {
             result = temp;
         }
 
-        setFilteredFoodItems(result);
-    }, [minPrice, maxPrice, tag, vegOrNonVeg]);
+        if (search !== '' && search !== null)
+        {
+            const fuse = new Fuse(result, {
+                keys: ["name"],
+                threshold: 0.2
+            });
 
-    const onSelectVeg = (value) => {
-        if (value == null)
-            setFilteredFoodItems(foodItems);
-        else {
-            const veg = value === "Veg"? true : false;
-                const result = []
-                foodItems.forEach((foodItem) => {
-                    if (foodItem.veg == veg) {
-                        result.push(foodItem);
-                    }
+            const res = fuse.search(search);
+            const temp = [];
+            if (res.length > 0)
+            {
+                res.forEach((foodItem) => {
+                    temp.push(foodItem.item);
                 });
-                setFilteredFoodItems(result);
+                result = temp;
+            }
+            else
+                result = []
         }
-    };
+
+        setFilteredFoodItems(result);
+    }, [minPrice, maxPrice, tag, vegOrNonVeg, search]);
 
     const onSelectShop = (value) => {
         if (value == null)
@@ -132,24 +137,7 @@ const BuyerDashboard = () => {
         }
     }
 
-    const onChangeSearch = (event) => {
-        setSearch(event.target.value)
-        const fuse = new Fuse(foodItems, {
-            keys: ["name"],
-            threshold: 0.2
-        });
-
-        const result = fuse.search(event.target.value);
-        const finalResults = []
-        if (result.length > 0) {
-            result.forEach((food) => {
-                finalResults.push(food.item);
-            });
-            setFilteredFoodItems(finalResults);
-        } else {
-            setFilteredFoodItems(foodItems);
-        }
-    };
+    const onChangeSearch = (event) => { setSearch(event.target.value) };
 
     return (
         <Grid container item xs={12} md={12} lg={12}>
@@ -282,7 +270,7 @@ const BuyerDashboard = () => {
                         <TableBody>{
                             filteredFoodItems.map((food, ind) =>(
                                 <TableRow key={ind}>
-                                    <TableCell>{ind}</TableCell>
+                                    <TableCell>{ind + 1}</TableCell>
                                     <TableCell>{food.name}</TableCell>
                                     <TableCell>{food.description}</TableCell>
                                     <TableCell>{food.price}</TableCell>
