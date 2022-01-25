@@ -160,25 +160,10 @@ const BuyerDashboard = () => {
             setFilteredFoodItems(filteredFoodItems.sort((a, b) => b.rating - a.rating));
     }
 
-    const toggleSort = (sortBy) => {
-        if (sortBy === 'price')
-        {
-            setFilteredFoodItems(filteredFoodItems.sort((a, b) => a.price - b.price));
-        }
-        else if (sortBy === 'rating')
-        {
-            setFilteredFoodItems(filteredFoodItems.sort((a, b) => b.rating - a.rating));
-        }
-        else if (sortBy === 'name')
-        {
-            setFilteredFoodItems(filteredFoodItems.sort((a, b) => a.name.localeCompare(b.name)));
-        }
-    }
-
     const onChangeSearch = (event) => { setSearch(event.target.value) };
 
     return (
-        <Grid container item xs={12} md={12} lg={12}>
+        <Grid container item xs={12}>
             <Grid item xs={12} md={12} lg={12}>
                 <TextField
                     style={{ align: "right" }}
@@ -191,9 +176,9 @@ const BuyerDashboard = () => {
                 <h1>Filter</h1>
             </Grid>
             <Grid item>
-                <List component="nav" aria-label="mailbox folders" columnSpacing={0}>
+                <List component="nav" aria-label="mailbox folders" spacing={0}>
                     <ListItem xs={12}>
-                        <Grid container md={3} lg={3} columnSpacing={2}>
+                        <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 Price
                                 <p />
@@ -204,6 +189,7 @@ const BuyerDashboard = () => {
                                     type="number"
                                     style={{ minWidth: 100 }}
                                     fullWidth={true}
+                                    value={minPrice}
                                     onChange={(event) => setMinPrice(event.target.value)}
                                 />
                             </Grid>
@@ -213,11 +199,12 @@ const BuyerDashboard = () => {
                                     type="number"
                                     style={{ minWidth: 100 }}
                                     fullWidth={true}
+                                    value={maxPrice}
                                     onChange={(event) => setMaxPrice(event.target.value)}
                                 />
                             </Grid>
                         </Grid>
-                        <Grid container columnSpacing={2} md={3} lg={3} sx={{ml: 2}}>
+                        <Grid container spacing={2} sx={{ml: 2}}>
                             <Grid item xs={12}>
                                 Tag
                                 <p />
@@ -227,6 +214,7 @@ const BuyerDashboard = () => {
                                     options={allTags}
                                     style={{ minWidth: 200 }}
                                     onChange={(_, value) => setTag(value)}
+                                    value={tag}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
@@ -237,7 +225,7 @@ const BuyerDashboard = () => {
                                   />
                             </Grid>
                         </Grid>
-                        <Grid container columnSpacing={2} md={3} lg={3} sx={{ml: 2}}>
+                        <Grid container spacing={2} sx={{ml: 2}}>
                             <Grid item xs={12}>
                                 Veg/Non-Veg
                                 <p />
@@ -247,6 +235,7 @@ const BuyerDashboard = () => {
                                     options={["Veg", "Non-Veg"]}
                                     style={{ minWidth: 200 }}
                                     onChange={(_, value) => setVegOrNonVeg(value)}
+                                    value={vegOrNonVeg}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
@@ -257,7 +246,7 @@ const BuyerDashboard = () => {
                                   />
                             </Grid>
                         </Grid>
-                        <Grid container columnSpacing={2} md={3} lg={3} sx={{ml: 2}}>
+                        <Grid container spacing={2} sx={{ml: 2}}>
                             <Grid item xs={12}>
                                 Shop Name
                                 <p />
@@ -268,6 +257,7 @@ const BuyerDashboard = () => {
                                     options={allShopNames}
                                     style={{ minWidth: 200 }}
                                     onChange={(_, value) => setShopName(value)}
+                                    value={shopName}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
@@ -276,6 +266,30 @@ const BuyerDashboard = () => {
                                         />
                                     )}
                                   />
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={2} sx={{ml: 2}}>
+                            <Grid item xs={12}>
+                                Clear Filters
+                                <p />
+                            </Grid>
+                            <Grid item xs={1}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    style={{ minWidth: 200, minHeight : 55 }}
+                                    onClick={() => {
+                                        setMinPrice('');
+                                        setMaxPrice('');
+                                        setTag('');
+                                        setVegOrNonVeg('');
+                                        setShopName('');
+                                        setSearch('');
+                                        setFilteredFoodItems(foodItems);
+                                    }}
+                                >
+                                    Clear
+                                </Button>
                             </Grid>
                         </Grid>
                     </ListItem>
