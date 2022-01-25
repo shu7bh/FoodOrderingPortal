@@ -37,6 +37,7 @@ const BuyerDashboard = () => {
     const [_itemType, _setItemType] = useState('');
     const [_itemAddOns, _setItemAddOns] = useState([]);
     const [_itemRating, _setItemRating] = useState('');
+    const [_itemQuantity, _setItemQuantity] = useState(1);
 
     const [total, setTotal] = useState(0);
     const [addOnForOrders, setAddOnForOrders] = useState([]);
@@ -230,9 +231,32 @@ const BuyerDashboard = () => {
         _setItemRating(food.rating);
         _setItemVegOrNonVeg(food.veg)
         _setItemTags(food.tags);
-
         _setItemAddOns(food.addOns)
         setTotal(food.price);
+    }
+
+    const placeOrder = () => {
+        if (total * _itemQuantity > wallet)
+        {
+            alert("Insufficient wallet balance");
+            return;
+        }
+
+        let order = {
+            email: localStorage.getItem("user"),
+            itemName: _itemName,
+            shopName: _itemShopName,
+            price: total,
+            addOns: _itemAddOns
+        };
+
+        axios
+            .post("http://localhost:4000/order/add", order)
+            .then(() => {
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     return (
@@ -551,7 +575,10 @@ const BuyerDashboard = () => {
                 </Paper>
             </Grid>
             <Grid>
-                <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} >
+        <Dialog open={dialogOpen} onClose={() => {
+            setDialogOpen(false)
+            setAddOnForOrders([]);
+        }} >
                     <DialogTitle>
                         Buy
                     </DialogTitle>
@@ -601,10 +628,15 @@ const BuyerDashboard = () => {
                             </Grid>
                             <Grid item xs={6}>
                                 <TextField
-                                    label="Item Description"
+                                    label="Quantity"
+                                    type="number"
                                     variant="outlined"
-                                    value={_itemDescription === ''? 'No description' : _itemDescription}
-                                    disabled={true}
+                                    value={_itemQuantity}
+                                    onChange={(event) => {
+                                        let q = event.target.value;
+                                        if (q > 0)
+                                            _setItemQuantity(q);
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={9}>
@@ -673,9 +705,9 @@ const BuyerDashboard = () => {
                             <Grid item xs={4}>
                                 <Button
                                     variant="contained"
-                                    color="success"
+                                    color={total * _itemQuantity > wallet ? "error" : "success"}
                                     style={{ minWidth: 200, minHeight : 55 }}
-                                    onClick={() => { setDialogOpen(false) }}>
+                                    onClick={() => { setDialogOpen(false); placeOrder() }}>
                                     Confirm Order
                                 </Button>
                             </Grid>
@@ -683,7 +715,7 @@ const BuyerDashboard = () => {
                                 <TextField
                                     label="Total"
                                     variant="outlined"
-                                    value={total}
+                                    value={total * _itemQuantity}
                                     disabled={true}
                                 />
                             </Grid>
