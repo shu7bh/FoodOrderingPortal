@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Fuse from "fuse.js";
-import { Autocomplete, Button, MenuItem, Select, InputLabel, TextField, Grid, Paper, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem  } from "@mui/material";
+import { Autocomplete, Button, MenuItem, Select, InputLabel, TextField, Grid, Paper, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText  } from "@mui/material";
 import { InputAdornment, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -9,12 +9,14 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 const BuyerDashboard = () => {
 
+    const email = localStorage.getItem("user");
     const [foodItems, setFoodItems] = useState([]);
     const [filteredFoodItems, setFilteredFoodItems] = useState([]);
     const [wallet, setWallet] = useState(0);
-    const [email] = useState(localStorage.getItem("user"));
     const [allTags, setAllTags] = useState([]);
     const [allShopNames, setAllShopNames] = useState([]);
+    const [allFavourites, setAllFavourites] = useState([]);
+    const [favouriteCounter, setFavouriteCounter] = useState(0);
     const [search, setSearch] = useState('');
     const [tag, setTag] = useState('');
     const [vegOrNonVeg, setVegOrNonVeg] = useState();
@@ -23,6 +25,7 @@ const BuyerDashboard = () => {
     const [maxPrice, setMaxPrice] = useState('');
     const [sortPrice, setSortPrice] = useState(false);
     const [sortRating, setSortRating] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     useEffect(() => {
         axios
@@ -52,19 +55,21 @@ const BuyerDashboard = () => {
 
                 setAllShopNames(shopNames);
                 setAllTags(tags);
+
+                axios
+                    .post("http://localhost:4000/buyer/getWallet", {email: localStorage.getItem("user")})
+                    .then((response2) => {
+                        setWallet(response2.data.wallet);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             })
+
             .catch((error) => {
                 console.log(error);
             });
 
-        axios
-            .post("http://localhost:4000/buyer/getWallet", {email: email})
-            .then((response) => {
-                setWallet(response.data.wallet);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
 
     }, []);
 
@@ -123,7 +128,7 @@ const BuyerDashboard = () => {
         {
             const fuse = new Fuse(result, {
                 keys: ["name"],
-                threshold: 0.5
+                threshold: 0.3
             });
 
             const res = fuse.search(search);
@@ -141,6 +146,29 @@ const BuyerDashboard = () => {
 
         setFilteredFoodItems(result);
     }, [minPrice, maxPrice, tag, vegOrNonVeg, shopName, search]);
+
+    useEffect(() => {
+        axios
+            .post("http://localhost:4000/favourite/", {email: email})
+            .then((response) => {
+                if(allFavourites.length)
+                    setAllFavourites([]);
+                response.data.food.forEach((foodItem) => {
+                    axios
+                        .post("http://localhost:4000/food/getdetail", {itemName: foodItem.itemName, shopName:foodItem.shopName})
+                        .then((response) => {
+                            if (!allFavourites.includes(response.data))
+                                setAllFavourites(prev => [...prev, response.data]);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, [favouriteCounter, email])
 
     const onSortPrice = (val) => {
         setSortPrice(val);
@@ -162,8 +190,47 @@ const BuyerDashboard = () => {
 
     const onChangeSearch = (event) => { setSearch(event.target.value) };
 
+    const addToFavourites = (itemName, shopName) => {
+        axios
+            .post("http://localhost:4000/favourite/add", {email: email, itemName: itemName, shopName: shopName})
+            .then(() => {
+                setFavouriteCounter(favouriteCounter + 1)
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const removeFromFavourites = (itemName, shopName) => {
+        axios
+            .post("http://localhost:4000/favourite/remove", {email: email, itemName: itemName, shopName: shopName})
+            .then(() => {
+                setFavouriteCounter(favouriteCounter - 1)
+            })
+    }
+
     return (
         <Grid container item xs={12}>
+            <Grid>
+                <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} >
+                    <DialogTitle>
+                        Buy
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Are you sure you want to buy this item
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setDialogOpen(false)} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={() => { setDialogOpen(false) }} color="primary">
+                            Add
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Grid>
             <Grid item xs={12} md={12} lg={12}>
                 <TextField
                     style={{ align: "right" }}
@@ -171,6 +238,87 @@ const BuyerDashboard = () => {
                     variant="outlined"
                     value={wallet}
                 />
+            </Grid>
+            <Grid item xs={12} md={12} lg={12}>
+                <h1>Favourites</h1>
+            </Grid>
+            <Grid item xs={12} md={9} lg={20}>
+                <Paper>
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Sr No.</TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Description</TableCell>
+                                <TableCell>
+                                    Price
+                                    <Button onClick={() => onSortPrice(!sortPrice)}>
+                                        {sortPrice ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
+                                    </Button>
+                                </TableCell>
+                                <TableCell>
+                                    Rating
+                                    <Button onClick={() => onSortRating(!sortRating)}>
+                                        {sortRating ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
+                                    </Button>
+                                </TableCell>
+                                <TableCell>Tags</TableCell>
+                                <TableCell>Add Ons</TableCell>
+                                <TableCell>Canteen</TableCell>
+                                <TableCell>Veg/Non-Veg</TableCell>
+                                <TableCell></TableCell>
+                                <TableCell></TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>{
+                            allFavourites.map((food, ind) =>(
+                                <TableRow key={ind}>
+                                    <TableCell>{ind + 1}</TableCell>
+                                    <TableCell>{food.name}</TableCell>
+                                    <TableCell>{food.description}</TableCell>
+                                    <TableCell>{food.price}</TableCell>
+                                    <TableCell>{food.rating}</TableCell>
+                                    <TableCell>
+                                        <List>
+                                            {
+                                                food.tags.map((tag) => (
+                                                <ListItem> {tag.name} </ListItem>
+                                            ))}
+                                        </List>
+                                    </TableCell>
+                                    <TableCell>
+                                        <List>
+                                            {
+                                                food.addOns.map((addOn) => (
+                                                <ListItem> {addOn.name} </ListItem>
+                                            ))}
+                                        </List>
+                                    </TableCell>
+                                    <TableCell>{food.shopName}</TableCell>
+                                    <TableCell>{food.veg? "Veg" : "NonVeg"}</TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            style={{ minWidth: 100, minHeight : 45 }}
+                                            onClick={() => { removeFromFavourites(food.name, food.shopName) }}>
+                                            Remove to Favourites
+                                        </Button>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            style={{ minWidth: 100, minHeight : 45 }}
+                                            onClick={() => { setDialogOpen(true) }}>
+                                            Buy
+                                        </Button>
+                                    </TableCell>
+                              </TableRow>
+                        ))}
+                        </TableBody>
+                    </Table>
+                </Paper>
             </Grid>
             <Grid item xs={12} md={12} lg={12}>
                 <h1>Filter</h1>
@@ -336,6 +484,8 @@ const BuyerDashboard = () => {
                                 <TableCell>Add Ons</TableCell>
                                 <TableCell>Canteen</TableCell>
                                 <TableCell>Veg/Non-Veg</TableCell>
+                                <TableCell></TableCell>
+                                <TableCell></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>{
@@ -364,6 +514,24 @@ const BuyerDashboard = () => {
                                     </TableCell>
                                     <TableCell>{food.shopName}</TableCell>
                                     <TableCell>{food.veg? "Veg" : "NonVeg"}</TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            style={{ minWidth: 100, minHeight : 45 }}
+                                            onClick={() => { addToFavourites(food.name, food.shopName) }}>
+                                            Add to Favourites
+                                        </Button>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            style={{ minWidth: 100, minHeight : 45 }}
+                                            onClick={() => { setDialogOpen(true) }}>
+                                            Buy
+                                        </Button>
+                                    </TableCell>
                               </TableRow>
                         ))}
                         </TableBody>

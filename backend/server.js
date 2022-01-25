@@ -10,8 +10,7 @@ const DB_NAME = "FoodOrderingPortal"
 let BuyerRouter = require("./routes/Buyers.js");
 let VendorRouter = require("./routes/Vendors.js");
 let FoodRouter = require("./routes/Food.js");
-//let AddonRouter = require("./routes/AddOn.js");
-//let TagRouter = require("./routes/Tag.js");
+let FavouriteRouter = require("./routes/Favourites.js");
 
 app.use(cors());
 app.use(express.json());
@@ -30,8 +29,7 @@ connection.once('open', function() {
 app.use("/buyer", BuyerRouter);
 app.use("/vendor", VendorRouter);
 app.use("/food", FoodRouter);
-//app.use("/addon", AddonRouter);
-//app.use("/tag", TagRouter);
+app.use("/favourite", FavouriteRouter);
 
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);

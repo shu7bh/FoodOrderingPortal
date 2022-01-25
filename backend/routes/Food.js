@@ -7,7 +7,6 @@ const Food = require("../models/Food");
 //const Tag = require("../models/Tag")
 
 // GET request
-// Getting all the users
 router.get("/", function(req, res) {
     Food.find(function(err, foodItems) {
 		if (err) {
@@ -36,6 +35,18 @@ router.post("/add", (req, res) => {
         .catch(err => {
             res.status(400).send(err);
         });
+});
+
+// Get the food item by itemName and shopName
+router.post("/getdetail", (req, res) => {
+    Food.findOne({ name: req.body.itemName, shopName: req.body.shopName }).then(foodItem => {
+        if (!foodItem)
+            return res.status(404).send({
+                error: "Food item not found with name " + req.body.itemName + " and shop name " + req.body.shopName
+            });
+        else
+            return res.status(200).json(foodItem)
+    })
 });
 
 module.exports = router;
