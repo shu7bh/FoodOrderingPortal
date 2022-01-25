@@ -242,17 +242,22 @@ const BuyerDashboard = () => {
             return;
         }
 
-        let order = {
-            email: localStorage.getItem("user"),
+        const order = {
+            email: email,
             itemName: _itemName,
             shopName: _itemShopName,
             price: total,
-            addOns: _itemAddOns
+            addOns: addOnForOrders,
+            quantity: Number(_itemQuantity),
+            rating: _itemRating
         };
 
+        console.log(order)
+
         axios
-            .post("http://localhost:4000/order/add", order)
+            .post("http://localhost:4000/buyerorder/add", order)
             .then(() => {
+                setWallet(wallet - (total * _itemQuantity));
             })
             .catch((error) => {
                 console.log(error);
@@ -577,7 +582,8 @@ const BuyerDashboard = () => {
             <Grid>
         <Dialog open={dialogOpen} onClose={() => {
             setDialogOpen(false)
-            setAddOnForOrders([]);
+            setAddOnForOrders([])
+            _setItemQuantity(1)
         }} >
                     <DialogTitle>
                         Buy

@@ -7,11 +7,16 @@ const BuyerOrderSchema = new Schema({
 		type: String,
 		required: true,
         trim: true,
-        unique: true
 	},
+    status: {
+        type: String,
+        default: "Placed",
+        required: true,
+        trim: true
+    },
     food: {
         type: {
-            name: {
+            itemName: {
                 type: String,
                 required: true,
                 trim: true
@@ -25,8 +30,22 @@ const BuyerOrderSchema = new Schema({
                 type: Number,
                 required: true,
                 trim: true
-            }
-
+            },
+            addOns: {
+                type: [String],
+                required: true,
+                trim: true
+            },
+            rating: {
+                type: Number,
+                required: true,
+                trim: true
+            },
+            shopName: {
+                type: String,
+                required: true,
+                trim: true
+            },
         }
     }
 }, {

@@ -11,6 +11,7 @@ let BuyerRouter = require("./routes/Buyers.js");
 let VendorRouter = require("./routes/Vendors.js");
 let FoodRouter = require("./routes/Food.js");
 let FavouriteRouter = require("./routes/Favourites.js");
+let BuyerOrderRouter = require("./routes/BuyerOrders.js");
 
 app.use(cors());
 app.use(express.json());
@@ -30,6 +31,7 @@ app.use("/buyer", BuyerRouter);
 app.use("/vendor", VendorRouter);
 app.use("/food", FoodRouter);
 app.use("/favourite", FavouriteRouter);
+app.use("/buyerorder", BuyerOrderRouter);
 
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);
