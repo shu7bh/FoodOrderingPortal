@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Fuse from "fuse.js";
-import { Autocomplete, Button, MenuItem, Select, InputLabel, TextField, Grid, Paper, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText  } from "@mui/material";
+import { Autocomplete, Button, MenuItem, Chip, Select, InputLabel, TextField, Grid, Paper, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText  } from "@mui/material";
 import { InputAdornment, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -26,6 +26,20 @@ const BuyerDashboard = () => {
     const [sortPrice, setSortPrice] = useState(false);
     const [sortRating, setSortRating] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
+
+    const [_itemName, _setItemName] = useState('');
+    const [_itemPrice, _setItemPrice] = useState('');
+    const [_itemDescription, _setItemDescription] = useState('');
+    const [_itemImage, _setItemImage] = useState('');
+    const [_itemTags, _setItemTags] = useState([]);
+    const [_itemShopName, _setItemShopName] = useState('');
+    const [_itemVegOrNonVeg, _setItemVegOrNonVeg] = useState('');
+    const [_itemType, _setItemType] = useState('');
+    const [_itemAddOns, _setItemAddOns] = useState([]);
+    const [_itemRating, _setItemRating] = useState('');
+
+    const [total, setTotal] = useState(0);
+    const [addOnForOrders, setAddOnForOrders] = useState([]);
 
     useEffect(() => {
         axios
@@ -209,28 +223,20 @@ const BuyerDashboard = () => {
             })
     }
 
+    const setFoodItem = (food) => {
+        _setItemName(food.name);
+        _setItemShopName(food.shopName);
+        _setItemPrice(food.price);
+        _setItemRating(food.rating);
+        _setItemVegOrNonVeg(food.veg)
+        _setItemTags(food.tags);
+
+        _setItemAddOns(food.addOns)
+        setTotal(food.price);
+    }
+
     return (
         <Grid container item xs={12}>
-            <Grid>
-                <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} >
-                    <DialogTitle>
-                        Buy
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Are you sure you want to buy this item
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setDialogOpen(false)} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={() => { setDialogOpen(false) }} color="primary">
-                            Add
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </Grid>
             <Grid item xs={12} md={12} lg={12}>
                 <TextField
                     style={{ align: "right" }}
@@ -310,7 +316,10 @@ const BuyerDashboard = () => {
                                             variant="contained"
                                             color="primary"
                                             style={{ minWidth: 100, minHeight : 45 }}
-                                            onClick={() => { setDialogOpen(true) }}>
+                                            onClick={() => {
+                                                setDialogOpen(true);
+                                                setFoodItem(food);
+                                            }}>
                                             Buy
                                         </Button>
                                     </TableCell>
@@ -528,7 +537,10 @@ const BuyerDashboard = () => {
                                             variant="contained"
                                             color="primary"
                                             style={{ minWidth: 100, minHeight : 45 }}
-                                            onClick={() => { setDialogOpen(true) }}>
+                                            onClick={() => {
+                                                setDialogOpen(true);
+                                                setFoodItem(food);
+                                            }}>
                                             Buy
                                         </Button>
                                     </TableCell>
@@ -537,6 +549,147 @@ const BuyerDashboard = () => {
                         </TableBody>
                     </Table>
                 </Paper>
+            </Grid>
+            <Grid>
+                <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} >
+                    <DialogTitle>
+                        Buy
+                    </DialogTitle>
+                    <DialogContent>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Item Name"
+                                    variant="outlined"
+                                    value={_itemName}
+                                    disabled={true}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Item Price"
+                                    variant="outlined"
+                                    value={_itemPrice}
+                                    disabled={true}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Shop Name"
+                                    variant="outlined"
+                                    value={_itemShopName}
+                                    disabled={true}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Item Type"
+                                    variant="outlined"
+                                    value={_itemVegOrNonVeg ? 'Veg' : 'Non-Veg'}
+                                    disabled={true}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Item Rating"
+                                    variant="outlined"
+                                    value={_itemRating}
+                                    disabled={true}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Item Description"
+                                    variant="outlined"
+                                    value={_itemDescription === ''? 'No description' : _itemDescription}
+                                    disabled={true}
+                                />
+                            </Grid>
+                            <Grid item xs={9}>
+                            </Grid>
+                            <Grid item xs={9}>
+                            </Grid>
+                            <Grid item xs={12}>
+                            {
+                                _itemAddOns.map((addOn) => (
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={4.5}>
+                                            <TextField
+                                                label="Add On Name"
+                                                variant="outlined"
+                                                value={addOn.name}
+                                                disabled={true}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4.5}>
+                                            <TextField
+                                                label="Add On Price"
+                                                variant="outlined"
+                                                value={addOn.price}
+                                                disabled={true}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={2.5}>
+                                            <Button
+                                                variant="contained"
+                                                color={addOnForOrders.includes(addOn.name) ? "secondary" : "primary"}
+                                                style={{ minWidth: 100, minHeight : 55 }}
+                                                onClick={() => {
+                                                    if (addOnForOrders.includes(addOn.name))
+                                                    {
+                                                        setAddOnForOrders(prev => prev.filter(item => item !== addOn.name))
+                                                        setTotal(total - addOn.price);
+                                                    }
+                                                    else
+                                                    {
+                                                        setAddOnForOrders(prev => [...prev, addOn.name])
+                                                        setTotal(total + addOn.price);
+                                                    }
+                                                }}>
+                                                {addOnForOrders.includes(addOn.name)? "Remove" : "Add"}
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                        </Grid>
+                                    </Grid>
+                                ))
+                            }
+                            </Grid>
+                        </Grid>
+                    </DialogContent>
+                    <DialogActions>
+                        <Grid container spacing={3}>
+                            <Grid item xs={4}>
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    style={{ minWidth: 200, minHeight : 55 }}
+                                    onClick={() => { setDialogOpen(false) }}>
+                                    Cancel Order
+                                </Button>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <Button
+                                    variant="contained"
+                                    color="success"
+                                    style={{ minWidth: 200, minHeight : 55 }}
+                                    onClick={() => { setDialogOpen(false) }}>
+                                    Confirm Order
+                                </Button>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextField
+                                    label="Total"
+                                    variant="outlined"
+                                    value={total}
+                                    disabled={true}
+                                />
+                            </Grid>
+                        </Grid>
+                    </DialogActions>
+                </Dialog>
             </Grid>
         </Grid>
     );
