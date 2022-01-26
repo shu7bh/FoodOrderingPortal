@@ -15,6 +15,7 @@ import BuyerWallet from "./components/buyers/buyerWallet.js";
 import VendorNavbar from "./components/vendors/vendorNavbar.js";
 import VendorProfile from "./components/vendors/vendorProfile";
 import VendorDashboard from "./components/vendors/vendorDashboard.js";
+import VendorMyOrders from "./components/vendors/vendorMyOrders";
 import VendorStatistics from "./components/vendors/vendorStatistics";
 
 const VendorNavbarLayout = () => {
@@ -67,6 +68,7 @@ function App() {
             </Route>
             <Route path="/" element={<VendorNavbarLayout />}>
             <Route path="/vendor/profile" element={<VendorProfile />} />
+            <Route path="/vendor/myorders" element={<VendorMyOrders />} />
             <Route path="/vendor/dashboard" element={<VendorDashboard />} />
             <Route path="/vendor/statistics" element={<VendorStatistics />} />
             </Route>

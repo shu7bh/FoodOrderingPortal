@@ -627,11 +627,11 @@ const BuyerDashboard = () => {
                 </Paper>
             </Grid>
             <Grid>
-        <Dialog open={dialogOpen} onClose={() => {
-            setDialogOpen(false)
-            setAddOnForOrders([])
-            _setItemQuantity(1)
-        }} >
+                <Dialog open={dialogOpen} onClose={() => {
+                    setDialogOpen(false)
+                    setAddOnForOrders([])
+                    _setItemQuantity(1)
+                }} >
                     <DialogTitle>
                         Buy
                     </DialogTitle>

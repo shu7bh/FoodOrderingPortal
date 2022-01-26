@@ -102,6 +102,19 @@ router.post("/update", (req, res) => {
     })
 })
 
+router.post("/getshopname", (req, res) => {
+    Vendor.findOne({ email: req.body.email }).then(user => {
+        // Check if user email exists
+        if (!user) {
+            return res.status(400).json({
+                error: "Email not found",
+            });
+        }
+        else
+            return res.status(200).json(user.shopName);
+    });
+})
+
 router.get("/getshopnames", (req, res) => {
     Vendor.find().then(vendors => {
         // Check if user email exists

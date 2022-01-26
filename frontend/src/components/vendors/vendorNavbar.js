@@ -16,10 +16,13 @@ const HomeNavbar = () => {
                     Dashboard
                 </Typography>
                 <Box sx={{ flexGrow: 1 }} />
-                <Button color="inherit" onClick={() => navigate("/vendor/Statistics")}>
+                <Button color="inherit" onClick={() => navigate("/vendor/myorders")}>
+                    My Orders
+                </Button>
+                <Button color="inherit" onClick={() => navigate("/vendor/statistics")}>
                     Statistics
                 </Button>
-                <Button color="inherit" onClick={() => navigate("/vendor/Profile")}>
+                <Button color="inherit" onClick={() => navigate("/vendor/profile")}>
                     My Profile
                 </Button>
                 <Button color="inherit" onClick={() => {
