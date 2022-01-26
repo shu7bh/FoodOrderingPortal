@@ -31,8 +31,8 @@ const VendorLogin = (props) => {
             .then((response) => {
                 alert("Login Successful");
                 resetInputs();
-                navigate("/vendor/dashboard");
                 localStorage.setItem("user", checkUser.email);
+                navigate("/vendor/dashboard");
             })
             .catch((error) => {
                 alert("Login Failed");

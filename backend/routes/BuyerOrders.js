@@ -57,7 +57,7 @@ router.post("/getallorders", (req, res) => {
 })
 
 router.post("/updatestatus", (req, res) => {
-    BuyerOrder.findOne( { email: req.body.email, "food.itemName": req.body.itemName, "food.shopName": req.body.shopName }).then((order) => {
+    BuyerOrder.findOne( { email: req.body.email, createdAt: req.body.createdAt }).then((order) => {
         if (!order) {
             return res.status(400).json({
                 error: "Email not found",
@@ -88,7 +88,7 @@ router.post("/updatestatus", (req, res) => {
 })
 
 router.post("/updaterejected", (req, res) => {
-    BuyerOrder.findOne( { email: req.body.email, "food.itemName": req.body.itemName, "food.shopName": req.body.shopName }).then((order) => {
+    BuyerOrder.findOne( { email: req.body.email, createdAt: req.body.createdAt }).then((order) => {
         if (!order) {
             return res.status(400).json({
                 error: "Email not found",
@@ -100,6 +100,7 @@ router.post("/updaterejected", (req, res) => {
             order.save()
                 .then(order => {
                     res.status(200).json(order);
+                    console.log("hello")
                 })
                 .catch(err => {
                     res.status(400).send(err);

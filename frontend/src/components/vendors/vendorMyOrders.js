@@ -7,7 +7,6 @@ const VendorMyOrders = () => {
     const [orders, setOrders] = useState([]);
     const [shopName, setShopName] = useState("");
     const [_status, _setStatus] = useState("");
-    //const [rate, setRate] = useState(3);
 
     useEffect(() => {
         axios
@@ -29,9 +28,9 @@ const VendorMyOrders = () => {
             });
     }, []);
 
-    const handleStatus = (buyerEmail, itemName, shopName) => {
+    const handleStatus = (buyerEmail, createdAt) => {
         axios
-            .post("http://localhost:4000/buyerorder/updatestatus", {email: buyerEmail, itemName: itemName, shopName: shopName})
+            .post("http://localhost:4000/buyerorder/updatestatus", {email: buyerEmail, createdAt: createdAt})
             .then((response) => {
                 window.location.reload();
             })
@@ -40,11 +39,26 @@ const VendorMyOrders = () => {
             });
     }
 
-    const handleRejected = (buyerEmail, itemName, shopName) => {
+    const handleRejected = (buyerEmail, createdAt, price) => {
         axios
-            .post("http://localhost:4000/buyerorder/updaterejected", {email: buyerEmail, itemName: itemName, shopName: shopName})
-            .then((response) => {
-                window.location.reload();
+            .post("http://localhost:4000/buyerorder/updaterejected", {email: buyerEmail, createdAt: createdAt})
+            .then(() => {
+                axios
+                    .post("http://localhost:4000/buyer/getWallet", {email: buyerEmail})
+                    .then((response) => {
+                        console.log(response.data.wallet)
+                        axios
+                            .post("http://localhost:4000/buyer/setWallet", {email: buyerEmail, wallet: Number(response.data.wallet) + Number(price)})
+                            .then(() => {
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            })
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+                //window.location.reload();
             })
             .catch((error) => {
                 console.log(error);
@@ -75,9 +89,7 @@ const VendorMyOrders = () => {
                                 <TableRow key={ind}>
                                     <TableCell>{ind + 1}</TableCell>
                                     <TableCell>
-                                        {(new Date(order.createdAt)).getHours()}
-                                        :
-                                        {(new Date(order.createdAt)).getMinutes()}
+                                        {(new Date(order.createdAt)).toTimeString().split(' ')[0]}
                                     </TableCell>
                                     <TableCell>{order.food.itemName}</TableCell>
                                     <TableCell>{order.food.quantity}</TableCell>
@@ -103,7 +115,23 @@ const VendorMyOrders = () => {
                                                     style={{ minWidth: 200, minHeight : 45 }}
                                                     disabled={order.myStatus === "Completed"}
                                                     color={order.myStatus === "Placed"? "success" : "primary"}
-                                                    onClick={() => { handleStatus(order.email, order.food.itemName, order.food.shopName) }}>
+                                                    onClick={() => {
+                                                        if (order.myStatus === "Placed")
+                                                        {
+                                                            let ct = 0;
+                                                            for(let i = 0; i < orders.length; i++) {
+                                                                if(orders[i].myStatus === "Accepted" || orders[i].myStatus === "Cooking") {
+                                                                    ct++;
+                                                                }
+                                                            }
+                                                            if (ct > 9)
+                                                                alert("You have reached the maximum number of orders. Please wait for some time.");
+                                                            else
+                                                                handleStatus(order.email, order.createdAt)
+                                                        }
+                                                        else
+                                                            handleStatus(order.email, order.createdAt)
+                                                    }}>
                                                     {order.myStatus === "Completed"? "Completed" : order.myStatus === "Placed" ? "Accept" : order.myStatus === "Ready For Pickup" ? "Mark as Completed" : "Move to Next Stage"}
                                                 </Button>
                                             </Grid>
@@ -114,7 +142,7 @@ const VendorMyOrders = () => {
                                                                 variant="contained"
                                                                 style={{ minWidth: 150, minHeight : 45 }}
                                                                 color="error"
-                                                                onClick={() => { handleRejected(order.email, order.food.itemName, order.food.shopName) }}>
+                                                                onClick={() => { handleRejected(order.email, order.createdAt, order.food.price) }}>
                                                                 Reject
                                                             </Button>
                                                         </Grid>

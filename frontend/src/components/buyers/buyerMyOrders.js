@@ -63,9 +63,7 @@ const BuyerMyOrders = () => {
                                 <TableRow key={ind}>
                                     <TableCell>{ind + 1}</TableCell>
                                     <TableCell>
-                                        {(new Date(order.createdAt)).getHours()}
-                                        :
-                                        {(new Date(order.createdAt)).getMinutes()}
+                                        {(new Date(order.createdAt)).toTimeString().split(' ')[0]}
                                     </TableCell>
                                     <TableCell>{order.food.itemName}</TableCell>
                                     <TableCell>{order.food.shopName}</TableCell>

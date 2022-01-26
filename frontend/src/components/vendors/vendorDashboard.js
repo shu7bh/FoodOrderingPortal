@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Autocomplete, Button, MenuItem, Chip, Select, InputLabel, TextField, Grid, Paper, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText  } from "@mui/material";
+import { TextField, Button, Grid, Paper, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem, Dialog, DialogContent, DialogActions, DialogTitle } from "@mui/material";
 import { Switch, FormControlLabel } from "@mui/material";
 
 const VendorDashboard = () => {
 
-    const [email, setEmail] = useState(localStorage.getItem("user"));
     const [name, setName] = useState("");
     const [savedName, setSavedName] = useState("");
     const [price, setPrice] = useState(0);
@@ -33,8 +31,9 @@ const VendorDashboard = () => {
 
     const deleteFood = (itemName) => {
         axios.post("http://localhost:4000/food/remove", {shopName: shopName, itemName: itemName})
-            .then(res => {
+            .then(() => {
                 setOrders(orders.filter(order => order.name !== itemName && order.shopName !== shopName));
+                window.location.reload();
             })
             .catch(err => console.log(err));
     };
@@ -101,8 +100,8 @@ const VendorDashboard = () => {
 
                 axios
                     .post("http://localhost:4000/food/getallfood", {shopName: response.data})
-                    .then((response) => {
-                        setOrders(response.data);
+                    .then((res) => {
+                        setOrders(res.data);
                     })
                     .catch((error) => {
                         console.log(error);

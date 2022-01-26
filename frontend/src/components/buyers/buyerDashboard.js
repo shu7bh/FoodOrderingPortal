@@ -283,7 +283,10 @@ const BuyerDashboard = () => {
     }
 
     const placeOrder = () => {
-        if (total * _itemQuantity > wallet)
+
+        let totalPrice = total * _itemQuantity;
+
+        if (totalPrice > wallet)
         {
             alert("Insufficient wallet balance");
             return;
@@ -293,7 +296,7 @@ const BuyerDashboard = () => {
             email: email,
             itemName: _itemName,
             shopName: _itemShopName,
-            price: total,
+            price: totalPrice,
             addOns: addOnForOrders,
             quantity: Number(_itemQuantity),
             rating: _itemRating
@@ -302,7 +305,14 @@ const BuyerDashboard = () => {
         axios
             .post("http://localhost:4000/buyerorder/add", order)
             .then(() => {
-                setWallet(wallet - (total * _itemQuantity));
+                axios
+                    .post("http://localhost:4000/buyer/setWallet", {email: email, wallet: wallet - totalPrice})
+                    .then(() => {
+                        setWallet(wallet - totalPrice);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             })
             .catch((error) => {
                 console.log(error);
