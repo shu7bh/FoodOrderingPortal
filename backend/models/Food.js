@@ -24,6 +24,11 @@ const FoodSchema = new Schema({
         max: 5,
         required: true
     },
+    ratingNumber: {
+        type: Number,
+        default: 0,
+        required: true
+    },
     image: {
         type: String,
     },

@@ -49,4 +49,29 @@ router.post("/getdetail", (req, res) => {
     })
 });
 
+router.post("/setRate", (req, res) => {
+    Food.findOne({ name: req.body.itemName, shopName: req.body.shopName })
+        .then(foodItem => {
+            if (!foodItem)
+                return res.status(404).send({
+                    error: "Food item not found with name " + req.body.itemName + " and shop name " + req.body.shopName
+                });
+            else {
+                let rating = Number(foodItem.rating);
+                rating *= Number(foodItem.ratingNumber);
+
+                rating += Number(req.body.rate);
+                foodItem.ratingNumber++;
+
+                rating /= Number(foodItem.ratingNumber);
+
+                foodItem.rating = rating;
+
+                foodItem.save().then(foodItem => {
+                    return res.status(200).json(foodItem)
+                })
+            }
+    })
+})
+
 module.exports = router;

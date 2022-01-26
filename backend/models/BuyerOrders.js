@@ -8,7 +8,7 @@ const BuyerOrderSchema = new Schema({
 		required: true,
         trim: true,
 	},
-    status: {
+    myStatus: {
         type: String,
         default: "Placed",
         required: true,

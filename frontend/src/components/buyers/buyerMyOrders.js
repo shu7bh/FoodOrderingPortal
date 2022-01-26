@@ -1,68 +1,104 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Autocomplete, Button, MenuItem, Chip, Select, InputLabel, TextField, Grid, Paper, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText  } from "@mui/material";
 import axios from "axios";
-import Grid from "@mui/material/Grid";
-import { MenuItem, Select, TextField, Button  } from "@mui/material";
 
-const BuyerMyOrders = (props) => {
-    const navigate = useNavigate();
+const BuyerMyOrders = () => {
+    const [email] = useState(localStorage.getItem('user'));
+    const [orders, setOrders] = useState([]);
+    const [rate, setRate] = useState(3);
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    useEffect(() => {
+        axios
+            .post("http://localhost:4000/buyerorder/getorders", {email: localStorage.getItem('user')})
+            .then((response) => {
+                setOrders(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
 
-    const onChangeEmail = (event) => { setEmail(event.target.value); };
-    const onChangePassword = (event) => { setPassword(event.target.value); }
-
-    const resetInputs = () => {
-        setEmail("");
-        setPassword("");
-    };
-
-    const onSubmit = (event) => {
-        event.preventDefault();
-
-        const checkUser = {
-            email: email,
-            password: password
+    const handleRate = (itemName, shopName) => {
+        const orderRate = {
+            itemName: itemName,
+            shopName: shopName,
+            rate: rate
         };
 
         axios
-            .post("http://localhost:4000/buyer/login", checkUser)
-            .then((response) => {
-                alert("Login Successful");
-                resetInputs();
-                navigate("/buyer/profile");
-                localStorage.setItem("user", checkUser.email);
+            .post("http://localhost:4000/food/setRate", orderRate)
+            .then(() => {
             })
-            .catch((error) => {
-                alert("Error\t" + error);
+            .catch(() => {
             });
-    };
+    }
+
+    const onChangeRate = (event) => {
+        if (event.target.value <= 5 && event.target.value >= 1)
+            setRate(event.target.value);
+    }
 
     return (
-        <Grid container align={"center"} spacing={2}>
-            <Grid item xs={12}>
-                <TextField
-                    label="Email"
-                    variant="outlined"
-                    type="email"
-                    value={email}
-                    onChange={onChangeEmail}
-                />
+        <Grid container item xs={12}>
+            <Grid item xs={12} md={12} lg={12}>
+                <h1>My Orders</h1>
             </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    label="Password"
-                    variant="outlined"
-                    type="password"
-                    value={password}
-                    onChange={onChangePassword}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <Button variant="contained" onClick={onSubmit}>
-                    Login
-                </Button>
+            <Grid item xs={12} md={9} lg={20}>
+                <Paper>
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Sr No.</TableCell>
+                                <TableCell>Order Time</TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Canteen</TableCell>
+                                <TableCell>Quantity</TableCell>
+                                <TableCell>Status</TableCell>
+                                <TableCell>Price</TableCell>
+                                <TableCell>Rating</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>{
+                            orders.map((order, ind) =>(
+                                <TableRow key={ind}>
+                                    <TableCell>{ind + 1}</TableCell>
+                                    <TableCell>
+                                        {(new Date(order.createdAt)).getHours()}
+                                        :
+                                        {(new Date(order.createdAt)).getMinutes()}
+                                    </TableCell>
+                                    <TableCell>{order.food.itemName}</TableCell>
+                                    <TableCell>{order.food.shopName}</TableCell>
+                                    <TableCell>{order.food.quantity}</TableCell>
+                                    <TableCell>{order.myStatus}</TableCell>
+                                    <TableCell>{order.food.price}</TableCell>
+                                    <TableCell>
+                                        <TextField
+                                            style={{ maxWidth: 100 }}
+                                            label="Rate"
+                                            type="number"
+                                            disabled={order.myStatus !== "Completed"}
+                                            variant="standard"
+                                            min={1}
+                                            max={5}
+                                            value={rate}
+                                            onChange={onChangeRate}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            style={{ minWidth: 100, minHeight : 45 }}
+                                            onClick={() => { handleRate(order.food.itemName, order.food.shopName) }}>
+                                            Rate
+                                        </Button>
+                                    </TableCell>
+                              </TableRow>
+                        ))}
+                        </TableBody>
+                    </Table>
+                </Paper>
             </Grid>
         </Grid>
     );
