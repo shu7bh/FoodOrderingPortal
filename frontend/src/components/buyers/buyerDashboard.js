@@ -42,6 +42,8 @@ const BuyerDashboard = () => {
     const [total, setTotal] = useState(0);
     const [addOnForOrders, setAddOnForOrders] = useState([]);
 
+    const [closedCanteens, setClosedCanteens] = useState([]);
+
     useEffect(() => {
         axios
             .get("http://localhost:4000/food/")
@@ -79,13 +81,22 @@ const BuyerDashboard = () => {
                     .catch((error) => {
                         console.log(error);
                     });
+
+                // Get shop names based on the time
+                axios
+                    .get("http://localhost:4000/vendor/getshopnames")
+                    .then((response2) => {
+                        console.log(response2.data);
+                        setClosedCanteens(response2.data);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             })
 
             .catch((error) => {
                 console.log(error);
             });
-
-
     }, []);
 
     useEffect(() => {
@@ -159,8 +170,18 @@ const BuyerDashboard = () => {
                 result = []
         }
 
+        let arr1 = [];
+        let arr2 = [];
+        result.forEach((foodItem) => {
+            if (closedCanteens.includes(foodItem.shopName))
+                arr1.push(foodItem);
+            else
+                arr2.push(foodItem);
+        })
+
+        result = [...arr2, ...arr1]
         setFilteredFoodItems(result);
-    }, [minPrice, maxPrice, tag, vegOrNonVeg, shopName, search]);
+    }, [minPrice, maxPrice, tag, vegOrNonVeg, shopName, search, closedCanteens]);
 
     useEffect(() => {
         axios
@@ -188,19 +209,45 @@ const BuyerDashboard = () => {
     const onSortPrice = (val) => {
         setSortPrice(val);
 
+        let result = [];
         if (val)
-            setFilteredFoodItems(filteredFoodItems.sort((a, b) => b.price - a.price));
+            result = filteredFoodItems.sort((a, b) => b.price - a.price);
         else
-            setFilteredFoodItems(filteredFoodItems.sort((a, b) => a.price - b.price));
+            result = filteredFoodItems.sort((a, b) => a.price - b.price);
+
+        let arr1 = [];
+        let arr2 = [];
+        result.forEach((foodItem) => {
+            if (closedCanteens.includes(foodItem.shopName))
+                arr1.push(foodItem);
+            else
+                arr2.push(foodItem);
+        })
+
+        result = [...arr2, ...arr1]
+        setFilteredFoodItems(result)
     }
 
     const onSortRating = (val) => {
         setSortRating(val);
 
+        let result = [];
         if (val)
-            setFilteredFoodItems(filteredFoodItems.sort((a, b) => a.rating - b.rating));
+            result = filteredFoodItems.sort((a, b) => a.rating - b.rating);
         else
-            setFilteredFoodItems(filteredFoodItems.sort((a, b) => b.rating - a.rating));
+            result = filteredFoodItems.sort((a, b) => b.rating - a.rating);
+
+        let arr1 = [];
+        let arr2 = [];
+        result.forEach((foodItem) => {
+            if (closedCanteens.includes(foodItem.shopName))
+                arr1.push(foodItem);
+            else
+                arr2.push(foodItem);
+        })
+
+        result = [...arr2, ...arr1]
+        setFilteredFoodItems(result)
     }
 
     const onChangeSearch = (event) => { setSearch(event.target.value) };
@@ -251,8 +298,6 @@ const BuyerDashboard = () => {
             quantity: Number(_itemQuantity),
             rating: _itemRating
         };
-
-        console.log(order)
 
         axios
             .post("http://localhost:4000/buyerorder/add", order)
@@ -337,7 +382,7 @@ const BuyerDashboard = () => {
                                             color="primary"
                                             style={{ minWidth: 100, minHeight : 45 }}
                                             onClick={() => { removeFromFavourites(food.name, food.shopName) }}>
-                                            Remove to Favourites
+                                            Remove from Favourites
                                         </Button>
                                     </TableCell>
                                     <TableCell>
@@ -345,11 +390,12 @@ const BuyerDashboard = () => {
                                             variant="contained"
                                             color="primary"
                                             style={{ minWidth: 100, minHeight : 45 }}
+                                            disabled={closedCanteens.includes(food.shopName)}
                                             onClick={() => {
                                                 setDialogOpen(true);
                                                 setFoodItem(food);
                                             }}>
-                                            Buy
+                                            { (closedCanteens.includes(food.shopName)) ? "Closed" : "Buy" }
                                         </Button>
                                     </TableCell>
                               </TableRow>
@@ -566,11 +612,12 @@ const BuyerDashboard = () => {
                                             variant="contained"
                                             color="primary"
                                             style={{ minWidth: 100, minHeight : 45 }}
+                                            disabled={closedCanteens.includes(food.shopName)}
                                             onClick={() => {
                                                 setDialogOpen(true);
                                                 setFoodItem(food);
                                             }}>
-                                            Buy
+                                            { (closedCanteens.includes(food.shopName)) ? "Closed" : "Buy" }
                                         </Button>
                                     </TableCell>
                               </TableRow>

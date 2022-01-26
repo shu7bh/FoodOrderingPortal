@@ -102,4 +102,128 @@ router.post("/update", (req, res) => {
     })
 })
 
+router.get("/getshopnames", (req, res) => {
+    Vendor.find().then(vendors => {
+        // Check if user email exists
+        if (!vendors) {
+            return res.status(400).json({
+            });
+        }
+        else
+        {
+            const curDate = new Date();
+            let shopNames = [];
+            // Using for each, go through all vendors
+            vendors.forEach(vendor => {
+                const openingTime = vendor.openingTime.split(":");
+                const closingTime = vendor.closingTime.split(":");
+
+                // Check if the current date is between the opening and closing time
+                if
+                (
+                    (
+                        (
+                            (curDate.getHours() > openingTime[0])
+                            ||
+                            (
+                                curDate.getHours() == openingTime[0]
+                                &&
+                                curDate.getMinutes() >= openingTime[1]
+                            )
+                        )
+                        &&
+                        (
+                            (curDate.getHours() < closingTime[0])
+                            ||
+                            (
+                                curDate.getHours() == closingTime[0]
+                                &&
+                                curDate.getMinutes() <= closingTime[1]
+                            )
+                        )
+                        &&
+                        (
+                            (openingTime[0] < closingTime[0])
+                            ||
+                            (
+                                openingTime[0] == closingTime[0]
+                                &&
+                                openingTime[1] < closingTime[1]
+                            )
+                        )
+                    )
+                    ||
+                    (
+                        (
+                            curDate.getHours() < openingTime[0]
+                            ||
+                            (
+                                curDate.getHours() == openingTime[0]
+                                &&
+                                curDate.getMinutes() <= openingTime[1]
+                            )
+                        )
+                        &&
+                        (
+                            (curDate.getHours() < closingTime[0])
+                            ||
+                            (
+                                curDate.getHours() == closingTime[0]
+                                &&
+                                curDate.getMinutes() <= closingTime[1]
+                            )
+                        )
+                        &&
+                        (
+                            (openingTime[0] > closingTime[0])
+                            ||
+                            (
+                                openingTime[0] == closingTime[0]
+                                &&
+                                openingTime[1] > closingTime[1]
+                            )
+                        )
+                    )
+                    ||
+                    (
+                        (
+                            (curDate.getHours() > openingTime[0])
+                            ||
+                            (
+                                curDate.getHours() == openingTime[0]
+                                &&
+                                curDate.getMinutes() >= openingTime[1]
+                            )
+                        )
+                        &&
+                        (
+                            (curDate.getHours() > closingTime[0])
+                            ||
+                            (
+                                curDate.getHours() == closingTime[0]
+                                &&
+                                curDate.getMinutes() >= closingTime[1]
+                            )
+                        )
+                        &&
+                        (
+                            (openingTime[0] > closingTime[0])
+                            ||
+                            (
+                                openingTime[0] == closingTime[0]
+                                &&
+                                openingTime[1] > closingTime[1]
+                            )
+                        )
+                    )
+                )
+                    ;
+                else
+                    shopNames.push(vendor.shopName);
+            });
+            return res.status(200).json(shopNames);
+        }
+    });
+})
+
 module.exports = router;
