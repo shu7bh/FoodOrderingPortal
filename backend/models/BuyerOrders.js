@@ -29,7 +29,6 @@ const BuyerOrderSchema = new Schema({
             quantity: {
                 type: Number,
                 required: true,
-                trim: true
             },
             addOns: {
                 type: [String],
@@ -39,7 +38,6 @@ const BuyerOrderSchema = new Schema({
             rating: {
                 type: Number,
                 required: true,
-                trim: true
             },
             shopName: {
                 type: String,

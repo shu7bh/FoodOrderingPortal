@@ -25,6 +25,17 @@ router.post("/add", (req, res) => {
         });
 });
 
+// Update rating in buyer order table
+router.post("/setrating", (req, res) => {
+    BuyerOrder.findOneAndUpdate({ createdAt: req.body.createdAt, email: req.body.email }, {  $set: { "food.rating": req.body.rating } }, { new: true })
+        .then(order => {
+            res.status(200).json(order);
+        })
+        .catch(err => {
+            res.status(400).send(err);
+        });
+})
+
 router.post("/getorders", (req, res) => {
     BuyerOrder.find({ email: req.body.email }).then(orders => {
         if (!orders) {
