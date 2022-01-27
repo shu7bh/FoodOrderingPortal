@@ -60,7 +60,7 @@ const BuyerMyOrders = () => {
 
     return (
         <Grid container item xs={12}>
-            <Grid item xs={12} md={12} lg={12}>
+            <Grid item xs={12} align="center">
                 <h1>My Orders</h1>
             </Grid>
             <Grid item xs={12} md={9} lg={20}>

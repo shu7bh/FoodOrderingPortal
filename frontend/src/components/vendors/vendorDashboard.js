@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { TextField, Button, Grid, Paper, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem, Dialog, DialogContent, DialogActions, DialogTitle } from "@mui/material";
+import { TextField, Button, Grid, Paper, Menu, MenuItem, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem, Dialog, DialogContent, DialogActions, DialogTitle } from "@mui/material";
 import { Switch, FormControlLabel } from "@mui/material";
 
 const VendorDashboard = () => {
@@ -20,6 +20,13 @@ const VendorDashboard = () => {
 
     const [isEditOn, setIsEditOn] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
+
+    const [anchorMenu, setAnchorMenu] = useState(null);
+    const toOpen = Boolean(anchorMenu);
+    const [toShow, setToShow] = useState([]);
+
+    const handleMenuClick = (event, list) => { setAnchorMenu(event.currentTarget); setToShow(list)};
+    const handleMenuClose = () => { setAnchorMenu(null); setToShow([])};
 
     const resetInputs = () => {
         setName("");
@@ -119,7 +126,7 @@ const VendorDashboard = () => {
             </Grid>
             <Grid item xs={12} align="center">
                 <Button
-                    variant="contained"
+                    variant="outlined"
                     style={{minWidth: 150}}
                     onClick={() => setDialogOpen(true)}
                     color="primary">
@@ -132,12 +139,12 @@ const VendorDashboard = () => {
                     <Table size="small">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Sr No.</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Price </TableCell>
-                                <TableCell>Tags</TableCell>
-                                <TableCell>Add Ons</TableCell>
-                                <TableCell>Veg/Non-Veg</TableCell>
+                                <TableCell><b>Sr No.</b></TableCell>
+                                <TableCell><b>Name</b></TableCell>
+                                <TableCell><b>Price </b></TableCell>
+                                <TableCell><b>Tags</b></TableCell>
+                                <TableCell><b>Add Ons</b></TableCell>
+                                <TableCell><b>Veg/Non-Veg</b></TableCell>
                                 <TableCell></TableCell>
                                 <TableCell></TableCell>
                             </TableRow>
@@ -149,35 +156,40 @@ const VendorDashboard = () => {
                                     <TableCell>{food.name}</TableCell>
                                     <TableCell>{food.price}</TableCell>
                                     <TableCell>
-                                        <List>
-                                            {
-                                                food.tags.map((tag) => (
-                                                <ListItem> {tag.name} </ListItem>
-                                            ))}
-                                        </List>
+                                        <Button
+                                            style={{ textTransform: 'none' }}
+                                            disabled={food.tags.length === 0}
+                                            onClick={event => handleMenuClick(event, food.tags)}
+                                            variant="outlined"
+                                        >
+                                            Tags
+                                        </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <List>
-                                            {
-                                                food.addOns.map((addOn) => (
-                                                <ListItem> {addOn.name} </ListItem>
-                                            ))}
-                                        </List>
+                                        <Button
+                                            onClick={event => handleMenuClick(event, food.addOns)}
+                                            disabled={food.addOns.length === 0}
+                                            color="secondary"
+                                            variant="outlined"
+                                            style={{ textTransform: 'none' }}
+                                        >
+                                            Add Ons
+                                        </Button>
                                     </TableCell>
                                     <TableCell>{food.veg? "Veg" : "NonVeg"}</TableCell>
                                     <TableCell>
                                         <Grid container spacing={1}>
                                             <Grid item xs={6}>
                                                 <Button
-                                                    variant="contained"
+                                                    variant="outlined"
                                                     onClick={() => deleteFood(food.name)}
-                                                    color="primary">
+                                                    color="error">
                                                     Delete
                                                 </Button>
                                             </Grid>
                                             <Grid item xs={6}>
                                                 <Button
-                                                    variant="contained"
+                                                    variant="outlined"
                                                     color="primary"
                                                     onClick={() => {
                                                         setDialogOpen(true);
@@ -404,6 +416,20 @@ const VendorDashboard = () => {
                         </Grid>
                     </DialogActions>
                 </Dialog>
+            </Grid>
+            <Grid>
+                <Menu
+                    id="basic-menu"
+                    anchorEl={anchorMenu}
+                    open={toOpen}
+                    onClose={handleMenuClose}
+                >
+                {
+                    toShow.map((addOn) => (
+                        <MenuItem> {addOn.name} </MenuItem>
+                    ))
+                }
+                </Menu>
             </Grid>
         </Grid>
     );

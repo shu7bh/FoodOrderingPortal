@@ -27,27 +27,14 @@ const BuyerDashboard = () => {
     const [sortRating, setSortRating] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
 
-    const [anchorTag, setAnchorTag] = useState(null);
-    const [anchorAddOns, setAnchorAddOns] = useState(null);
-    const [favouriteAnchorTag, setFavouriteAnchorTag] = useState(null);
-    const [favouriteAnchorAddOns, setFavouriteAnchorAddOns] = useState(null);
+    const [showFavourites, setShowFavourites] = useState(false);
 
+    const [anchorMenu, setAnchorMenu] = useState(null);
+    const toOpen = Boolean(anchorMenu);
+    const [toShow, setToShow] = useState([]);
 
-    const tagOpen = Boolean(anchorTag);
-    const addOnsOpen = Boolean(anchorAddOns);
-    const favouriteTagOpen = Boolean(favouriteAnchorTag)
-    const favouriteAddOnsOpen = Boolean(favouriteAnchorAddOns)
-
-    const [tagsToShow, setTagsToShow] = useState([]);
-    const [addOnsToShow, setAddOnsToShow] = useState([]);
-    const [favouriteTagsToShow, setFavouriteTagsToShow] = useState([]);
-    const [favouriteAddOnsToShow, setFavouriteAddOnsToShow] = useState([]);
-
-    const handleTagClick = (event, tags) => { setAnchorTag(event.currentTarget); setTagsToShow(tags)};
-    const handleTagClose = () => { setAnchorTag(null); setTagsToShow([])};
-
-    const handleAddOnsClick = (event, addOns) => { setAnchorAddOns(event.currentTarget); setAddOnsToShow(addOns)};
-    const handleAddOnsClose = () => { setAnchorAddOns(null); setAddOnsToShow([])};
+    const handleMenuClick = (event, list) => { setAnchorMenu(event.currentTarget); setToShow(list)};
+    const handleMenuClose = () => { setAnchorMenu(null); setToShow([])};
 
     const [_itemName, _setItemName] = useState('');
     const [_itemPrice, _setItemPrice] = useState('');
@@ -176,7 +163,7 @@ const BuyerDashboard = () => {
         {
             const fuse = new Fuse(result, {
                 keys: ["name"],
-                threshold: 0.3
+                threshold: 0.5
             });
 
             const res = fuse.search(search);
@@ -342,42 +329,52 @@ const BuyerDashboard = () => {
     }
 
     return (
-        <Grid container item xs={12}>
+        <Grid container item xs={12} spacing={2}>
             <Grid item xs={12} align="right">
                 <TextField
                     style={{ align: "right" }}
                     label="Wallet"
-                    variant="outlined"
+                    disabled={true}
                     value={wallet}
                 />
             </Grid>
             <Grid item xs={12} align="center">
-                <h1>Favourites</h1>
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => { setShowFavourites(!showFavourites) }}
+                >
+                    <b>Favourites</b>
+                </Button>
             </Grid>
+            <Grid item xs={12}>
+            </Grid>
+        {
+            showFavourites ?
+
             <Grid item xs={12} md={9} lg={20}>
                 <Paper>
                     <Table size="small">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Sr No.</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Description</TableCell>
+                                <TableCell><b>Sr No.</b></TableCell>
+                                <TableCell><b>Name</b></TableCell>
                                 <TableCell>
-                                    Price
+                                    <b>Price</b>
                                     <Button onClick={() => onSortPrice(!sortPrice)}>
                                         {sortPrice ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    Rating
+                                    <b>Rating</b>
                                     <Button onClick={() => onSortRating(!sortRating)}>
                                         {sortRating ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
                                     </Button>
                                 </TableCell>
-                                <TableCell>Tags</TableCell>
-                                <TableCell>Add Ons</TableCell>
-                                <TableCell>Canteen</TableCell>
-                                <TableCell>Veg/Non-Veg</TableCell>
+                                <TableCell><b>Tags</b></TableCell>
+                                <TableCell><b>Add Ons</b></TableCell>
+                                <TableCell><b>Canteen</b></TableCell>
+                                <TableCell><b>Veg/Non-Veg</b></TableCell>
                                 <TableCell></TableCell>
                                 <TableCell></TableCell>
                             </TableRow>
@@ -387,7 +384,6 @@ const BuyerDashboard = () => {
                                 <TableRow key={ind}>
                                     <TableCell>{ind + 1}</TableCell>
                                     <TableCell>{food.name}</TableCell>
-                                    <TableCell>{food.description}</TableCell>
                                     <TableCell>{food.price}</TableCell>
                                     <TableCell>
                                         <Rating
@@ -402,7 +398,7 @@ const BuyerDashboard = () => {
                                     <TableCell>
                                         <Button
                                             style={{ textTransform: 'none' }}
-                                            onClick={event => handleTagClick(event, food.tags)}
+                                            onClick={event => handleMenuClick(event, food.tags)}
                                             variant="outlined"
                                         >
                                             Tags
@@ -410,7 +406,7 @@ const BuyerDashboard = () => {
                                     </TableCell>
                                     <TableCell>
                                         <Button
-                                            onClick={event => handleAddOnsClick(event, food.addOns)}
+                                            onClick={event => handleMenuClick(event, food.addOns)}
                                             color="secondary"
                                             variant="outlined"
                                             style={{ textTransform: 'none' }}
@@ -424,9 +420,9 @@ const BuyerDashboard = () => {
                                         <Button
                                             variant="outlined"
                                             color="error"
-                                            style={{ minWidth: 100, minHeight : 45, textTransform: 'none' }}
+                                            style={{ minWidth: 150, minHeight : 45, textTransform: 'none' }}
                                             onClick={() => { removeFromFavourites(food.name, food.shopName) }}>
-                                            Remove from Favourites
+                                            Remove
                                         </Button>
                                     </TableCell>
                                     <TableCell>
@@ -448,8 +444,10 @@ const BuyerDashboard = () => {
                     </Table>
                 </Paper>
             </Grid>
+            : null
+        }
             <Grid item xs align="center">
-                <h1>Filters</h1>
+                <h1>Menu</h1>
             </Grid>
             <Grid item>
                 <List component="nav" aria-label="mailbox folders" spacing={0}>
@@ -586,25 +584,24 @@ const BuyerDashboard = () => {
                     <Table size="small">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Sr No.</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Description</TableCell>
+                                <TableCell><b>Sr No.</b></TableCell>
+                                <TableCell><b>Name</b></TableCell>
                                 <TableCell>
-                                    Price
+                                    <b>Price</b>
                                     <Button onClick={() => onSortPrice(!sortPrice)}>
                                         {sortPrice ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    Rating
+                                    <b>Rating</b>
                                     <Button onClick={() => onSortRating(!sortRating)}>
                                         {sortRating ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
                                     </Button>
                                 </TableCell>
-                                <TableCell>Tags</TableCell>
-                                <TableCell>Add Ons</TableCell>
-                                <TableCell>Canteen</TableCell>
-                                <TableCell>Veg/Non-Veg</TableCell>
+                                <TableCell><b>Tags</b></TableCell>
+                                <TableCell><b>Add Ons</b></TableCell>
+                                <TableCell><b>Canteen</b></TableCell>
+                                <TableCell><b>Veg/Non-Veg</b></TableCell>
                                 <TableCell></TableCell>
                                 <TableCell></TableCell>
                             </TableRow>
@@ -614,7 +611,6 @@ const BuyerDashboard = () => {
                                 <TableRow key={ind}>
                                     <TableCell>{ind + 1}</TableCell>
                                     <TableCell>{food.name}</TableCell>
-                                    <TableCell>{food.description}</TableCell>
                                     <TableCell>{food.price}</TableCell>
                                     <TableCell>
                                         <Rating
@@ -629,45 +625,23 @@ const BuyerDashboard = () => {
                                     <TableCell>
                                         <Button
                                             style={{ textTransform: 'none' }}
-                                            onClick={event => handleTagClick(event, food.tags)}
+                                            disabled={food.tags.length === 0}
+                                            onClick={event => handleMenuClick(event, food.tags)}
                                             variant="outlined"
                                         >
                                             Tags
                                         </Button>
-                                        <Menu
-                                            id="basic-menu"
-                                            anchorEl={anchorTag}
-                                            open={tagOpen}
-                                            onClose={handleTagClose}
-                                        >
-                                        {
-                                            tagsToShow.map((tag) => (
-                                                <MenuItem> {tag.name} </MenuItem>
-                                            ))
-                                        }
-                                        </Menu>
                                     </TableCell>
                                     <TableCell>
                                         <Button
-                                            onClick={event => handleAddOnsClick(event, food.addOns)}
+                                            onClick={event => handleMenuClick(event, food.addOns)}
+                                            disabled={food.addOns.length === 0}
                                             color="secondary"
                                             variant="outlined"
                                             style={{ textTransform: 'none' }}
                                         >
                                             Add Ons
                                         </Button>
-                                        <Menu
-                                            id="basic-menu"
-                                            anchorEl={anchorAddOns}
-                                            open={addOnsOpen}
-                                            onClose={handleAddOnsClose}
-                                        >
-                                        {
-                                            addOnsToShow.map((addOn) => (
-                                                <MenuItem> {addOn.name} </MenuItem>
-                                            ))
-                                        }
-                                        </Menu>
                                     </TableCell>
                                     <TableCell>{food.shopName}</TableCell>
                                     <TableCell>{food.veg? "Veg" : "NonVeg"}</TableCell>
@@ -675,7 +649,7 @@ const BuyerDashboard = () => {
                                         <Button
                                             variant="outlined"
                                             color="secondary"
-                                            style={{ minWidth: 100, minHeight : 45, textTransform: 'none' }}
+                                            style={{ minWidth: 150, minHeight : 45, textTransform: 'none' }}
                                             onClick={() => { addToFavourites(food.name, food.shopName) }}>
                                             Add to Favourites
                                         </Button>
@@ -848,6 +822,20 @@ const BuyerDashboard = () => {
                         </Grid>
                     </DialogActions>
                 </Dialog>
+            </Grid>
+            <Grid>
+                <Menu
+                    id="basic-menu"
+                    anchorEl={anchorMenu}
+                    open={toOpen}
+                    onClose={handleMenuClose}
+                >
+                {
+                    toShow.map((addOn) => (
+                        <MenuItem> {addOn.name} </MenuItem>
+                    ))
+                }
+                </Menu>
             </Grid>
         </Grid>
     );
