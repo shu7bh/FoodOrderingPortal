@@ -29,12 +29,19 @@ const BuyerDashboard = () => {
 
     const [anchorTag, setAnchorTag] = useState(null);
     const [anchorAddOns, setAnchorAddOns] = useState(null);
+    const [favouriteAnchorTag, setFavouriteAnchorTag] = useState(null);
+    const [favouriteAnchorAddOns, setFavouriteAnchorAddOns] = useState(null);
+
 
     const tagOpen = Boolean(anchorTag);
-    const [tagsToShow, setTagsToShow] = useState([]);
-
     const addOnsOpen = Boolean(anchorAddOns);
+    const favouriteTagOpen = Boolean(favouriteAnchorTag)
+    const favouriteAddOnsOpen = Boolean(favouriteAnchorAddOns)
+
+    const [tagsToShow, setTagsToShow] = useState([]);
     const [addOnsToShow, setAddOnsToShow] = useState([]);
+    const [favouriteTagsToShow, setFavouriteTagsToShow] = useState([]);
+    const [favouriteAddOnsToShow, setFavouriteAddOnsToShow] = useState([]);
 
     const handleTagClick = (event, tags) => { setAnchorTag(event.currentTarget); setTagsToShow(tags)};
     const handleTagClose = () => { setAnchorTag(null); setTagsToShow([])};
@@ -385,6 +392,7 @@ const BuyerDashboard = () => {
                                     <TableCell>
                                         <Rating
                                             label="Rating"
+                                            disabled={true}
                                             min={1}
                                             max={5}
                                             precision={0.5}
@@ -392,20 +400,23 @@ const BuyerDashboard = () => {
                                         />
                                     </TableCell>
                                     <TableCell>
-                                        <List>
-                                            {
-                                                food.tags.map((tag) => (
-                                                <ListItem> {tag.name} </ListItem>
-                                            ))}
-                                        </List>
+                                        <Button
+                                            style={{ textTransform: 'none' }}
+                                            onClick={event => handleTagClick(event, food.tags)}
+                                            variant="outlined"
+                                        >
+                                            Tags
+                                        </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <List>
-                                            {
-                                                food.addOns.map((addOn) => (
-                                                <ListItem> {addOn.name} </ListItem>
-                                            ))}
-                                        </List>
+                                        <Button
+                                            onClick={event => handleAddOnsClick(event, food.addOns)}
+                                            color="secondary"
+                                            variant="outlined"
+                                            style={{ textTransform: 'none' }}
+                                        >
+                                            Add Ons
+                                        </Button>
                                     </TableCell>
                                     <TableCell>{food.shopName}</TableCell>
                                     <TableCell>{food.veg? "Veg" : "NonVeg"}</TableCell>
@@ -451,7 +462,6 @@ const BuyerDashboard = () => {
                                 <TextField
                                     label="Min"
                                     type="number"
-                                    style={{ minWidth: 100 }}
                                     fullWidth={true}
                                     value={minPrice}
                                     onChange={(event) => setMinPrice(event.target.value)}
@@ -461,7 +471,6 @@ const BuyerDashboard = () => {
                                 <TextField
                                     label="Max"
                                     type="number"
-                                    style={{ minWidth: 100 }}
                                     fullWidth={true}
                                     value={maxPrice}
                                     onChange={(event) => setMaxPrice(event.target.value)}
@@ -610,6 +619,7 @@ const BuyerDashboard = () => {
                                     <TableCell>
                                         <Rating
                                             label="Rating"
+                                            disabled={true}
                                             min={1}
                                             max={5}
                                             precision={0.5}
