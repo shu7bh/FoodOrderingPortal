@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { TextField, Button, Grid, Paper, Menu, MenuItem, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem, Dialog, DialogContent, DialogActions, DialogTitle } from "@mui/material";
 import { Switch, FormControlLabel } from "@mui/material";
+import TableHeader from "../tableHeader.js";
 
 const VendorDashboard = () => {
 
@@ -137,18 +138,7 @@ const VendorDashboard = () => {
             <Grid item xs={12}>
                 <Paper>
                     <Table size="small">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell><b>Sr No.</b></TableCell>
-                                <TableCell><b>Name</b></TableCell>
-                                <TableCell><b>Price </b></TableCell>
-                                <TableCell><b>Tags</b></TableCell>
-                                <TableCell><b>Add Ons</b></TableCell>
-                                <TableCell><b>Veg/Non-Veg</b></TableCell>
-                                <TableCell></TableCell>
-                                <TableCell></TableCell>
-                            </TableRow>
-                        </TableHead>
+                        <TableHeader/>
                         <TableBody>{
                             orders.map((food, ind) =>(
                                 <TableRow key={ind}>
@@ -287,7 +277,7 @@ const VendorDashboard = () => {
                             </Grid>
                             <Grid item xs={6}>
                                 <Button
-                                    variant="contained"
+                                    variant="outlined"
                                     color="primary"
                                     style={{minWidth: 250, minHeight: 55}}
                                     onClick={() => {
@@ -362,7 +352,7 @@ const VendorDashboard = () => {
                             </Grid>
                             <Grid item xs={4}>
                                 <Button
-                                    variant="contained"
+                                    variant="outlined"
                                     color="primary"
                                     style={{minWidth: 155, minHeight: 55}}
                                     onClick={() => {
@@ -386,7 +376,7 @@ const VendorDashboard = () => {
                             </Grid>
                             <Grid item xs={4}>
                                 <Button
-                                    variant="contained"
+                                    variant="outlined"
                                     color="error"
                                     style={{ minWidth: 200, minHeight : 55 }}
                                     onClick={() => { setDialogOpen(false); resetInputs() }}
@@ -396,7 +386,7 @@ const VendorDashboard = () => {
                             </Grid>
                             <Grid item xs={4}>
                                 <Button
-                                    variant="contained"
+                                    variant="outlined"
                                     color="success"
                                     style={{ minWidth: 200, minHeight : 55 }}
                                     onClick={() => {

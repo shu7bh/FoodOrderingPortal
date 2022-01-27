@@ -95,7 +95,6 @@ const BuyerDashboard = () => {
                 axios
                     .get("http://localhost:4000/vendor/getshopnames")
                     .then((response2) => {
-                        console.log(response2.data);
                         setClosedCanteens(response2.data);
                     })
                     .catch((error) => {
@@ -359,18 +358,8 @@ const BuyerDashboard = () => {
                             <TableRow>
                                 <TableCell><b>Sr No.</b></TableCell>
                                 <TableCell><b>Name</b></TableCell>
-                                <TableCell>
-                                    <b>Price</b>
-                                    <Button onClick={() => onSortPrice(!sortPrice)}>
-                                        {sortPrice ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
-                                    </Button>
-                                </TableCell>
-                                <TableCell>
-                                    <b>Rating</b>
-                                    <Button onClick={() => onSortRating(!sortRating)}>
-                                        {sortRating ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
-                                    </Button>
-                                </TableCell>
+                                <TableCell><b>Price </b></TableCell>
+                                <TableCell><b>Rating </b></TableCell>
                                 <TableCell><b>Tags</b></TableCell>
                                 <TableCell><b>Add Ons</b></TableCell>
                                 <TableCell><b>Canteen</b></TableCell>

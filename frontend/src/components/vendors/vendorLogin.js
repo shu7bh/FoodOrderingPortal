@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Grid from "@mui/material/Grid";
-import { MenuItem, Select, TextField, Button  } from "@mui/material";
+import { TextField, Button  } from "@mui/material";
 
 const VendorLogin = (props) => {
     const navigate = useNavigate();
@@ -28,13 +28,13 @@ const VendorLogin = (props) => {
 
         axios
             .post("http://localhost:4000/vendor/login", checkUser)
-            .then((response) => {
+            .then(() => {
                 alert("Login Successful");
                 resetInputs();
                 localStorage.setItem("user", checkUser.email);
                 navigate("/vendor/dashboard");
             })
-            .catch((error) => {
+            .catch(() => {
                 alert("Login Failed");
                 resetInputs();
             });
