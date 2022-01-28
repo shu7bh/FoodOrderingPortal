@@ -110,7 +110,6 @@ router.post("/getWallet", (req, res) => {
         }
         else
         {
-            console.log(user.wallet);
             return res.status(200).json(user);
         }
     });
@@ -126,7 +125,6 @@ router.post("/setWallet", (req, res) => {
         }
         else{
             user.wallet = req.body.wallet;
-            console.log(user.wallet)
             user.save()
                 .then(user => {
                     return res.status(200).json(user);

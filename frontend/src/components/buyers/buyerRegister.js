@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { MenuItem, Select, TextField, Button, Grid, FormControl, InputLabel  } from "@mui/material";
+import CustomGrid from "../reusables/Register";
 
 const BuyerRegister = () => {
     const navigate = useNavigate();
@@ -20,7 +21,15 @@ const BuyerRegister = () => {
     const onChangeAge = (event) => { setAge(event.target.value); }
     const onChangeBatch = (event) => { setBatch(event.target.value); }
 
-    const onSubmit = (event) => {
+    const val = [
+        { label: "Name", value: name, onChange: onChangeName },
+        { label: "Email", value: email, onChange: onChangeEmail },
+        { label: "Password", value: password, onChange: onChangePassword },
+        { label: "Contact", value: contact, onChange: onChangeContact },
+        { label: "Age", value: age, onChange: onChangeAge, type: "number" }
+    ]
+
+    const onSubmit = () => {
         const newUser = {
             name: name,
             email: email,
@@ -45,54 +54,7 @@ const BuyerRegister = () => {
 
     return (
         <Grid container align={"center"} spacing={2}>
-            <Grid item xs={12}>
-                <TextField
-                    label="Name"
-                    variant="outlined"
-                    value={name}
-                    onChange={onChangeName}
-                    sx = {{ minWidth: "400px", minHeight: "60px" }}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    label="Email"
-                    variant="outlined"
-                    type="email"
-                    value={email}
-                    onChange={onChangeEmail}
-                    sx = {{ minWidth: "400px", minHeight: "60px" }}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    label="Password"
-                    variant="outlined"
-                    type="password"
-                    value={password}
-                    onChange={onChangePassword}
-                    sx = {{ minWidth: "400px", minHeight: "60px" }}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    label="Contact Number"
-                    variant="outlined"
-                    value={contact}
-                    onChange={onChangeContact}
-                    sx = {{ minWidth: "400px", minHeight: "60px" }}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    label="Age"
-                    variant="outlined"
-                    type="number"
-                    value={age}
-                    onChange={onChangeAge}
-                    sx = {{ minWidth: "400px", minHeight: "60px" }}
-                />
-            </Grid>
+        { val.map(item => <CustomGrid {...item} />) }
             <Grid item xs={12}>
                 <FormControl>
                     <InputLabel> Batch </InputLabel>

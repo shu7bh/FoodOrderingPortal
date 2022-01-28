@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Grid from "@mui/material/Grid";
-import { TextField, Button  } from "@mui/material";
+import Login from "../reusables/Login"
 
 const VendorLogin = (props) => {
     const navigate = useNavigate();
@@ -41,37 +40,13 @@ const VendorLogin = (props) => {
     };
 
     return (
-        <Grid container align={"center"} spacing={2}>
-            <Grid item xs={12}>
-                <TextField
-                    label="Email"
-                    variant="outlined"
-                    type="email"
-                    value={email}
-                    onChange={onChangeEmail}
-                    sx = {{ minWidth: "400px", minHeight: "60px" }}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    label="Password"
-                    variant="outlined"
-                    type="password"
-                    value={password}
-                    onChange={onChangePassword}
-                    sx = {{ minWidth: "400px", minHeight: "60px" }}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <Button
-                    variant="contained"
-                    onClick={onSubmit}
-                    sx = {{ minWidth: "400px", minHeight: "60px" }}
-                >
-                    Login
-                </Button>
-            </Grid>
-        </Grid>
+        <Login
+            onSubmit={onSubmit}
+            onChangeEmail={onChangeEmail}
+            onChangePassword={onChangePassword}
+            email={email}
+            password={password}
+        />
     );
 };
 

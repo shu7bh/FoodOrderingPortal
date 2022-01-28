@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Grid from "@mui/material/Grid";
 import { MenuItem, Select, TextField, Button, FormControl, InputLabel  } from "@mui/material";
+import CustomGrid from "../reusables/Register";
 
 const VendorRegister = (props) => {
     const navigate = useNavigate();
@@ -22,6 +23,17 @@ const VendorRegister = (props) => {
     const onChangeShopName = (event) => { setShopName(event.target.value); }
     const onChangeOpeningTime = (event) => { setOpeningTime(event.target.value); }
     const onChangeClosingTime = (event) => { setClosingTime(event.target.value); }
+
+    const val = [
+        { label: "Name", value: name, onChange: onChangeName },
+        { label: "Email", value: email, onChange: onChangeEmail },
+        { label: "Password", value: password, onChange: onChangePassword },
+        { label: "Contact", value: contact, onChange: onChangeContact },
+        { label: "Shop Name", value: shopName, onChange: onChangeShopName },
+        { label: "Opening Time", value: openingTime, onChange: onChangeOpeningTime, type: "time" },
+        { label: "Closing Time", value: closingTime, onChange: onChangeClosingTime, type: "time" },
+    ]
+
 
     const onSubmit = (event) => {
         event.preventDefault();
@@ -50,73 +62,7 @@ const VendorRegister = (props) => {
 
     return (
         <Grid container align={"center"} spacing={2}>
-            <Grid item xs={12}>
-                <TextField
-                    sx = {{ minWidth: "400px", minHeight: "60px" }}
-                    label="Name"
-                    variant="outlined"
-                    value={name}
-                    onChange={onChangeName}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    sx = {{ minWidth: "400px", minHeight: "60px" }}
-                    label="Email"
-                    variant="outlined"
-                    type="email"
-                    value={email}
-                    onChange={onChangeEmail}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    sx = {{ minWidth: "400px", minHeight: "60px" }}
-                    label="Password"
-                    variant="outlined"
-                    type="password"
-                    value={password}
-                    onChange={onChangePassword}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    sx = {{ minWidth: "400px", minHeight: "60px" }}
-                    label="Contact Number"
-                    variant="outlined"
-                    value={contact}
-                    onChange={onChangeContact}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    sx = {{ minWidth: "400px", minHeight: "60px" }}
-                    label="Shop Name"
-                    variant="outlined"
-                    value={shopName}
-                    onChange={onChangeShopName}
-                />
-            </Grid>
-        <Grid item xs={12}>
-            <TextField
-                type="time"
-                label="Opening Time"
-                variant="outlined"
-                value={openingTime}
-                onChange={onChangeOpeningTime}
-                sx = {{ minWidth: "400px", minHeight: "60px" }}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    type="time"
-                    label="Closing Time"
-                    variant="outlined"
-                    value={closingTime}
-                    onChange={onChangeClosingTime}
-                    sx = {{ minWidth: "400px", minHeight: "60px" }}
-                    />
-            </Grid>
+        { val.map(item => <CustomGrid {...item} />) }
             <Grid item xs={12}>
                 <Button
                     variant="contained"
