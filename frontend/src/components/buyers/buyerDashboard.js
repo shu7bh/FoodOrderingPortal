@@ -6,6 +6,20 @@ import { InputAdornment, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import AutoComplete from "../reusables/AutoComplete"
+
+const DialogGrid = ({label, value, xs}) => {
+    return (
+        <Grid item xs={ xs === undefined ? 6 : xs }>
+            <TextField
+                label={label}
+                variant="outlined"
+                value={value}
+                disabled={true}
+            />
+        </Grid>
+    )
+}
 
 const BuyerDashboard = () => {
 
@@ -55,7 +69,7 @@ const BuyerDashboard = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:4000/food/")
+            .get("/api/food/")
             .then((response) => {
                 setFoodItems(response.data);
                 setFilteredFoodItems(response.data);
@@ -83,7 +97,7 @@ const BuyerDashboard = () => {
                 setAllTags(tags);
 
                 axios
-                    .post("http://localhost:4000/buyer/getWallet", {email: localStorage.getItem("user")})
+                    .post("/api/buyer/getWallet", {email: localStorage.getItem("user")})
                     .then((response2) => {
                         setWallet(response2.data.wallet);
                     })
@@ -93,7 +107,7 @@ const BuyerDashboard = () => {
 
                 // Get shop names based on the time
                 axios
-                    .get("http://localhost:4000/vendor/getshopnames")
+                    .get("/api/vendor/getshopnames")
                     .then((response2) => {
                         setClosedCanteens(response2.data);
                     })
@@ -193,13 +207,13 @@ const BuyerDashboard = () => {
 
     useEffect(() => {
         axios
-            .post("http://localhost:4000/favourite/", {email: email})
+            .post("/api/favourite/", {email: email})
             .then((response) => {
                 if(allFavourites.length)
                     setAllFavourites([]);
                 response.data.food.forEach((foodItem) => {
                     axios
-                        .post("http://localhost:4000/food/getdetail", {itemName: foodItem.itemName, shopName:foodItem.shopName})
+                        .post("/api/food/getdetail", {itemName: foodItem.itemName, shopName:foodItem.shopName})
                         .then((response) => {
                             if (!allFavourites.includes(response.data))
                                 setAllFavourites(prev => [...prev, response.data]);
@@ -262,7 +276,7 @@ const BuyerDashboard = () => {
 
     const addToFavourites = (itemName, shopName) => {
         axios
-            .post("http://localhost:4000/favourite/add", {email: email, itemName: itemName, shopName: shopName})
+            .post("/api/favourite/add", {email: email, itemName: itemName, shopName: shopName})
             .then(() => {
                 setFavouriteCounter(favouriteCounter + 1)
             })
@@ -273,7 +287,7 @@ const BuyerDashboard = () => {
 
     const removeFromFavourites = (itemName, shopName) => {
         axios
-            .post("http://localhost:4000/favourite/remove", {email: email, itemName: itemName, shopName: shopName})
+            .post("/api/favourite/remove", {email: email, itemName: itemName, shopName: shopName})
             .then(() => {
                 setFavouriteCounter(favouriteCounter - 1)
             })
@@ -311,10 +325,10 @@ const BuyerDashboard = () => {
         };
 
         axios
-            .post("http://localhost:4000/buyerorder/add", order)
+            .post("/api/buyerorder/add", order)
             .then(() => {
                 axios
-                    .post("http://localhost:4000/buyer/setWallet", {email: email, wallet: wallet - totalPrice})
+                    .post("/api/buyer/setWallet", {email: email, wallet: wallet - totalPrice})
                     .then(() => {
                         setWallet(wallet - totalPrice);
                     })
@@ -416,7 +430,7 @@ const BuyerDashboard = () => {
                                     </TableCell>
                                     <TableCell>
                                         <Button
-                                            variant="contained"
+                                            variant="outlined"
                                             color="success"
                                             style={{ minWidth: 100, minHeight : 45 }}
                                             disabled={closedCanteens.includes(food.shopName)}
@@ -449,7 +463,6 @@ const BuyerDashboard = () => {
                                 <TextField
                                     label="Min"
                                     type="number"
-                                    fullWidth={true}
                                     value={minPrice}
                                     onChange={(event) => setMinPrice(event.target.value)}
                                 />
@@ -458,7 +471,6 @@ const BuyerDashboard = () => {
                                 <TextField
                                     label="Max"
                                     type="number"
-                                    fullWidth={true}
                                     value={maxPrice}
                                     onChange={(event) => setMaxPrice(event.target.value)}
                                 />
@@ -469,19 +481,7 @@ const BuyerDashboard = () => {
                                 <h4>Tag</h4>
                             </Grid>
                             <Grid item xs={12}>
-                                <Autocomplete
-                                    options={allTags}
-                                    style={{ minWidth: 200 }}
-                                    onChange={(_, value) => setTag(value)}
-                                    value={tag}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Select Tag"
-                                            variant="outlined"
-                                        />
-                                    )}
-                                  />
+                                <AutoComplete value={tag} options={allTags} label="Select Tag" set={setTag} minWidth={200}/>
                             </Grid>
                         </Grid>
                         <Grid container spacing={2} sx={{ml: 2}}>
@@ -489,19 +489,7 @@ const BuyerDashboard = () => {
                                 <h4>Veg/Non-Veg</h4>
                             </Grid>
                             <Grid item xs={12}>
-                                <Autocomplete
-                                    options={["Veg", "Non-Veg"]}
-                                    style={{ minWidth: 200 }}
-                                    onChange={(_, value) => setVegOrNonVeg(value)}
-                                    value={vegOrNonVeg}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Veg/Non-Veg"
-                                            variant="outlined"
-                                        />
-                                    )}
-                                  />
+                                <AutoComplete value={vegOrNonVeg} options={["Veg", "Non-Veg"]} label="Select Veg/Non-Veg" set={setVegOrNonVeg} minWidth={200}/>
                             </Grid>
                         </Grid>
                         <Grid container spacing={2} sx={{ml: 2}}>
@@ -509,20 +497,7 @@ const BuyerDashboard = () => {
                                 <h4>Shop Name</h4>
                             </Grid>
                             <Grid item xs={12}>
-                                <Autocomplete
-                                    align="right"
-                                    options={allShopNames}
-                                    style={{ minWidth: 200 }}
-                                    onChange={(_, value) => setShopName(value)}
-                                    value={shopName}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Select Shop"
-                                            variant="outlined"
-                                        />
-                                    )}
-                                  />
+                                <AutoComplete value={shopName} options={allShopNames} label="Select Shop Name" set={setShopName} minWidth={200}/>
                             </Grid>
                         </Grid>
                         <Grid container spacing={2} sx={{ml: 2}}>
@@ -645,7 +620,7 @@ const BuyerDashboard = () => {
                                     </TableCell>
                                     <TableCell>
                                         <Button
-                                            variant="contained"
+                                            variant="outlined"
                                             color="success"
                                             style={{ minWidth: 100, minHeight : 45 }}
                                             disabled={closedCanteens.includes(food.shopName)}
@@ -675,46 +650,11 @@ const BuyerDashboard = () => {
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
                             </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    label="Item Name"
-                                    variant="outlined"
-                                    value={_itemName}
-                                    disabled={true}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    label="Item Price"
-                                    variant="outlined"
-                                    value={_itemPrice}
-                                    disabled={true}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    label="Shop Name"
-                                    variant="outlined"
-                                    value={_itemShopName}
-                                    disabled={true}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    label="Item Type"
-                                    variant="outlined"
-                                    value={_itemVegOrNonVeg ? 'Veg' : 'Non-Veg'}
-                                    disabled={true}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    label="Item Rating"
-                                    variant="outlined"
-                                    value={_itemRating}
-                                    disabled={true}
-                                />
-                            </Grid>
+                            <DialogGrid label="Item Name" value={_itemName} />
+                            <DialogGrid label="Item Price" value={_itemPrice} />
+                            <DialogGrid label="Shop Name" value={_itemShopName} />
+                            <DialogGrid label="Item Type" value={_itemVegOrNonVeg ? 'Veg' : 'Non-Veg'} />
+                            <DialogGrid label="Item Rating" items={_itemRating} />
                             <Grid item xs={6}>
                                 <TextField
                                     label="Quantity"
@@ -736,22 +676,8 @@ const BuyerDashboard = () => {
                             {
                                 _itemAddOns.map((addOn) => (
                                     <Grid container spacing={3}>
-                                        <Grid item xs={4.5}>
-                                            <TextField
-                                                label="Add On Name"
-                                                variant="outlined"
-                                                value={addOn.name}
-                                                disabled={true}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={4.5}>
-                                            <TextField
-                                                label="Add On Price"
-                                                variant="outlined"
-                                                value={addOn.price}
-                                                disabled={true}
-                                            />
-                                        </Grid>
+                                        <DialogGrid label="AddOns Name" value={addOn.name} xs={4.5}/>
+                                        <DialogGrid label="Add On Price" value={addOn.price} xs={4.5}/>
                                         <Grid item xs={2.5}>
                                             <Button
                                                 variant="contained"
@@ -800,14 +726,7 @@ const BuyerDashboard = () => {
                                     Confirm Order
                                 </Button>
                             </Grid>
-                            <Grid item xs={4}>
-                                <TextField
-                                    label="Total"
-                                    variant="outlined"
-                                    value={total * _itemQuantity}
-                                    disabled={true}
-                                />
-                            </Grid>
+                            <DialogGrid label="Total" value={total * _itemQuantity} xs={4}/>
                         </Grid>
                     </DialogActions>
                 </Dialog>

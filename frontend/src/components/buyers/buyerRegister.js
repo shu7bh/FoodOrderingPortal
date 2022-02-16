@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { MenuItem, Select, TextField, Button, Grid, FormControl, InputLabel  } from "@mui/material";
 import CustomGrid from "../reusables/Register";
+import AutoComplete from "../reusables/AutoComplete"
 
 const BuyerRegister = () => {
     const navigate = useNavigate();
@@ -13,18 +14,22 @@ const BuyerRegister = () => {
     const [contact, setContact] = useState("");
     const [age, setAge] = useState("20");
     const [batch, setBatch] = useState("");
+    const [allBatches, setAllBatches] = useState([]);
+
+    useEffect(() => {
+        setAllBatches(["UG1", "UG2", "UG3", "UG4", "UG5", "UG6", "UG7", "UG8", "PG1", "PG2"])
+    }, [])
 
     const onChangeName = (event) => { setName(event.target.value); };
     const onChangeEmail = (event) => { setEmail(event.target.value); };
     const onChangePassword = (event) => { setPassword(event.target.value); }
     const onChangeContact = (event) => { setContact(event.target.value); }
     const onChangeAge = (event) => { setAge(event.target.value); }
-    const onChangeBatch = (event) => { setBatch(event.target.value); }
 
     const val = [
         { label: "Name", value: name, onChange: onChangeName },
-        { label: "Email", value: email, onChange: onChangeEmail },
-        { label: "Password", value: password, onChange: onChangePassword },
+        { label: "Email", value: email, onChange: onChangeEmail, type: "email" },
+        { label: "Password", value: password, onChange: onChangePassword, type: "password" },
         { label: "Contact", value: contact, onChange: onChangeContact },
         { label: "Age", value: age, onChange: onChangeAge, type: "number" }
     ]
@@ -40,7 +45,7 @@ const BuyerRegister = () => {
         };
 
         axios
-            .post("http://localhost:4000/buyer/register", newUser)
+            .post("/api/buyer/register", newUser)
             .then((response) => {
                 alert("Created\t" + response.data.name);
                 localStorage.setItem("user", newUser.email);
@@ -49,33 +54,13 @@ const BuyerRegister = () => {
             .catch((error) => {
                 alert(error);
             });
-
     };
 
     return (
         <Grid container align={"center"} spacing={2}>
         { val.map(item => <CustomGrid {...item} />) }
             <Grid item xs={12}>
-                <FormControl>
-                    <InputLabel> Batch </InputLabel>
-                    <Select
-                        value={batch}
-                        onChange={onChangeBatch}
-                        sx = {{ minWidth: "400px", minHeight: "60px" }}
-                    >
-                        <MenuItem value={""}> <em>None</em> </MenuItem>
-                        <MenuItem value={"UG1"}>UG1</MenuItem>
-                        <MenuItem value={"UG2"}>UG2</MenuItem>
-                        <MenuItem value={"UG3"}>UG3</MenuItem>
-                        <MenuItem value={"UG4"}>UG4</MenuItem>
-                        <MenuItem value={"UG5"}>UG5</MenuItem>
-                        <MenuItem value={"UG6"}>UG6</MenuItem>
-                        <MenuItem value={"UG7"}>UG7</MenuItem>
-                        <MenuItem value={"UG8"}>UG8</MenuItem>
-                        <MenuItem value={"PG1"}>PG1</MenuItem>
-                        <MenuItem value={"PG2"}>PG2</MenuItem>
-                    </Select>
-                </FormControl>
+                <AutoComplete label={"Batch"} value={batch} set={setBatch} options={allBatches} minWidth={400} maxWidth={400}/>
             </Grid>
             <Grid item xs={12}>
                 <Button

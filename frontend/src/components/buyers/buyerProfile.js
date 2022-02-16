@@ -28,7 +28,7 @@ const BuyerProfile = (props) => {
     const onEditToggle = (event) => { setEditOn(!editOn) }
 
     useEffect(() => {
-        axios.post("http://localhost:4000/buyer/getDetails", {email: email})
+        axios.post("/api/buyer/getDetails", {email: email})
             .then((response) => {
                 setName(response.data.name);
                 setPassword(response.data.password);
@@ -73,7 +73,7 @@ const BuyerProfile = (props) => {
         };
 
         axios
-            .post("http://localhost:4000/buyer/update", user)
+            .post("/api/buyer/update", user)
             .then((response) => {
                 setSavedName(name);
                 setSavedPassword(password);

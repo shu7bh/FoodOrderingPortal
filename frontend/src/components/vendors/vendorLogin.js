@@ -26,7 +26,7 @@ const VendorLogin = (props) => {
         };
 
         axios
-            .post("http://localhost:4000/vendor/login", checkUser)
+            .post("/api/vendor/login", checkUser)
             .then(() => {
                 alert("Login Successful");
                 resetInputs();

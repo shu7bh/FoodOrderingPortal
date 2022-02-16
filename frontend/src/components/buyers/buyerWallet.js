@@ -11,7 +11,7 @@ const BuyerWallet = () => {
     const onChangeNewWallet = (event) => { setNewWallet(event.target.value); }
 
     useEffect(() => {
-        axios.post("http://localhost:4000/buyer/getWallet", {email: email})
+        axios.post("/api/buyer/getWallet", {email: email})
         .then((response) => {
             setWallet(response.data.wallet);
         })
@@ -29,7 +29,7 @@ const BuyerWallet = () => {
         };
 
         axios
-            .post("http://localhost:4000/buyer/setWallet", user)
+            .post("/api/buyer/setWallet", user)
             .then(() => {
                 alert("Wallet Updated");
                 setWallet(user.wallet);

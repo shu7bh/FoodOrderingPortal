@@ -27,7 +27,7 @@ const VendorRegister = (props) => {
     const val = [
         { label: "Name", value: name, onChange: onChangeName },
         { label: "Email", value: email, onChange: onChangeEmail },
-        { label: "Password", value: password, onChange: onChangePassword },
+        { label: "Password", value: password, onChange: onChangePassword, type: "password" },
         { label: "Contact", value: contact, onChange: onChangeContact },
         { label: "Shop Name", value: shopName, onChange: onChangeShopName },
         { label: "Opening Time", value: openingTime, onChange: onChangeOpeningTime, type: "time" },
@@ -49,7 +49,7 @@ const VendorRegister = (props) => {
         };
 
         axios
-            .post("http://localhost:4000/vendor/register", newUser)
+            .post("/api/vendor/register", newUser)
             .then((response) => {
                 alert("Created\t" + response.data.name);
                 localStorage.setItem("user", newUser.email);

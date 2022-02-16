@@ -38,7 +38,7 @@ const VendorDashboard = () => {
     };
 
     const deleteFood = (itemName) => {
-        axios.post("http://localhost:4000/food/remove", {shopName: shopName, itemName: itemName})
+        axios.post("/api/food/remove", {shopName: shopName, itemName: itemName})
             .then(() => {
                 setOrders(orders.filter(order => order.name !== itemName && order.shopName !== shopName));
                 window.location.reload();
@@ -68,7 +68,7 @@ const VendorDashboard = () => {
             shopName: shopName
         };
 
-        axios.post("http://localhost:4000/food/update", food)
+        axios.post("/api/food/update", food)
             .then(() => {
                 let newOrders = orders.filter(order => order.name !== savedName && order.shopName !== shopName);
                 newOrders = [...newOrders, {name: name, price: price, veg: veg, tags: tags, addOns: addOns, shopName: shopName}];
@@ -91,7 +91,7 @@ const VendorDashboard = () => {
             addOns: addOns
         };
 
-        axios.post("http://localhost:4000/food/add", food)
+        axios.post("/api/food/add", food)
             .then(() => {
                 setOrders(orders.concat(food));
             })
@@ -102,12 +102,12 @@ const VendorDashboard = () => {
 
     useEffect(() => {
         axios
-            .post("http://localhost:4000/vendor/getshopname", {email: localStorage.getItem('user')})
+            .post("/api/vendor/getshopname", {email: localStorage.getItem('user')})
             .then((response) => {
                 setShopName(response.data);
 
                 axios
-                    .post("http://localhost:4000/food/getallfood", {shopName: response.data})
+                    .post("/api/food/getallfood", {shopName: response.data})
                     .then((res) => {
                         setOrders(res.data);
                     })

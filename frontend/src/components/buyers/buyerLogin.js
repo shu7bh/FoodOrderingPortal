@@ -20,13 +20,14 @@ const BuyerLogin = () => {
     const onSubmit = (event) => {
         event.preventDefault();
 
+        console.log(email + ' + ' + password);
         const checkUser = {
             email: email,
             password: password
         };
 
         axios
-            .post("http://localhost:4000/buyer/login", checkUser)
+            .post("/api/buyer/login", checkUser)
             .then(() => {
                 alert("Login Successful");
                 resetInputs();

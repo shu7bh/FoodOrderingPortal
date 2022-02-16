@@ -111,7 +111,6 @@ router.post("/updaterejected", (req, res) => {
             order.save()
                 .then(order => {
                     res.status(200).json(order);
-                    console.log("hello")
                 })
                 .catch(err => {
                     res.status(400).send(err);

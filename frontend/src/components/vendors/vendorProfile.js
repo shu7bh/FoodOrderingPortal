@@ -32,7 +32,7 @@ const VendorProfile = (props) => {
     const onEditToggle = (event) => { setEditOn(!editOn); }
 
     useEffect(() => {
-        axios .post("http://localhost:4000/vendor/getDetails", {email: email})
+        axios .post("/api/vendor/getDetails", {email: email})
             .then((response) => {
                 setName(response.data.name);
                 setPassword(response.data.password);
@@ -81,7 +81,7 @@ const VendorProfile = (props) => {
         };
 
         axios
-            .post("http://localhost:4000/vendor/update", user)
+            .post("/api/vendor/update", user)
             .then((response) => {
                 setSavedName(name);
                 setSavedPassword(password);

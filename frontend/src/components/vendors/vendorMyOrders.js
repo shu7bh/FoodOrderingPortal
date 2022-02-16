@@ -10,12 +10,12 @@ const VendorMyOrders = () => {
 
     useEffect(() => {
         axios
-            .post("http://localhost:4000/vendor/getshopname", {email: localStorage.getItem('user')})
+            .post("/api/vendor/getshopname", {email: localStorage.getItem('user')})
             .then((response) => {
                 setShopName(response.data);
 
                 axios
-                    .post("http://localhost:4000/buyerorder/getallorders", {shopName: response.data})
+                    .post("/api/buyerorder/getallorders", {shopName: response.data})
                     .then((response) => {
                         setOrders(response.data);
                     })
@@ -30,7 +30,7 @@ const VendorMyOrders = () => {
 
     const handleStatus = (buyerEmail, createdAt) => {
         axios
-            .post("http://localhost:4000/buyerorder/updatestatus", {email: buyerEmail, createdAt: createdAt})
+            .post("/api/buyerorder/updatestatus", {email: buyerEmail, createdAt: createdAt})
             .then((response) => {
                 window.location.reload();
             })
@@ -41,14 +41,14 @@ const VendorMyOrders = () => {
 
     const handleRejected = (buyerEmail, createdAt, price) => {
         axios
-            .post("http://localhost:4000/buyerorder/updaterejected", {email: buyerEmail, createdAt: createdAt})
+            .post("/api/buyerorder/updaterejected", {email: buyerEmail, createdAt: createdAt})
             .then(() => {
                 axios
-                    .post("http://localhost:4000/buyer/getWallet", {email: buyerEmail})
+                    .post("/api/buyer/getWallet", {email: buyerEmail})
                     .then((response) => {
                         console.log(response.data.wallet)
                         axios
-                            .post("http://localhost:4000/buyer/setWallet", {email: buyerEmail, wallet: Number(response.data.wallet) + Number(price)})
+                            .post("/api/buyer/setWallet", {email: buyerEmail, wallet: Number(response.data.wallet) + Number(price)})
                             .then(() => {
                             })
                             .catch((error) => {
@@ -58,7 +58,7 @@ const VendorMyOrders = () => {
                     .catch((error) => {
                         console.log(error);
                     });
-                //window.location.reload();
+                window.location.reload();
             })
             .catch((error) => {
                 console.log(error);

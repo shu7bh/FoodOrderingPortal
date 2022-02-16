@@ -24,10 +24,10 @@ const VendorProfile = () => {
     const [completedOrders, setCompletedOrders] = useState(0);
 
     useEffect(() => {
-        axios.post("http://localhost:4000/vendor/getshopname", {email: localStorage.getItem("user")})
+        axios.post("/api/vendor/getshopname", {email: localStorage.getItem("user")})
             .then((response) => {
                 axios
-                    .post("http://localhost:4000/buyerorder/getallorders", {shopName: response.data})
+                    .post("/api/buyerorder/getallorders", {shopName: response.data})
                     .then((response) => {
                         let topFood = [];
                         let pendingOrders = 0;

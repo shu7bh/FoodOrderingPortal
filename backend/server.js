@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 require('dotenv').config();
 // Connection to MongoDB
 //const uri = process.env.ATLAS_URI;
-mongoose.connect('mongodb://127.0.0.1:' + MONGO_PORT + '/' + DB_NAME, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://db:' + MONGO_PORT + '/' + DB_NAME, { useNewUrlParser: true, useUnifiedTopology: true });
 const connection = mongoose.connection;
 connection.once('open', function() {
     console.log("MongoDB database connection established successfully !");

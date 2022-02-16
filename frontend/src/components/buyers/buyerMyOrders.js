@@ -8,7 +8,7 @@ const BuyerMyOrders = () => {
 
     useEffect(() => {
         axios
-            .post("http://localhost:4000/buyerorder/getorders", {email: localStorage.getItem('user')})
+            .post("/api/buyerorder/getorders", {email: localStorage.getItem('user')})
             .then((response) => {
                 setOrders(response.data);
             })
@@ -25,14 +25,14 @@ const BuyerMyOrders = () => {
         };
 
         axios
-            .post("http://localhost:4000/food/setRate", orderRate)
+            .post("/api/food/setRate", orderRate)
             .then(() => {
             })
             .catch(() => {
             });
 
         axios
-            .post("http://localhost:4000/buyerorder/setrating", { email: email, rating: rate, createdAt: createdAt })
+            .post("/api/buyerorder/setrating", { email: email, rating: rate, createdAt: createdAt })
             .then(res => {
                 console.log(res.data);
             })
